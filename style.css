@@ -1,0 +1,1130 @@
+@import url('https://fonts.googleapis.com/css2?family=Over+the+Rainbow&display=swap');
+
+:root {
+    /* Spring */
+    --spring-bg: #f7faf7;
+    --spring-accent: #7dcfa7;
+    --spring-card: #eaf7ef;
+    --spring-text: #2e4637;
+    --spring-shadow: 0 4px 24px rgba(125, 207, 167, 0.08);
+
+    /* Summer */
+    --summer-bg: #fdf6fa;
+    --summer-accent: #f7a8c8;
+    --summer-card: #fbeaf3;
+    --summer-text: #4d3142;
+    --summer-shadow: 0 4px 24px rgba(247, 168, 200, 0.08);
+
+    /* Autumn */
+    --autumn-bg: #fdf8f4;
+    --autumn-accent: #e6b97a;
+    --autumn-card: #f9f3ea;
+    --autumn-text: #4d3a23;
+    --autumn-shadow: 0 4px 24px rgba(230, 185, 122, 0.08);
+
+    /* Winter */
+    --winter-bg: #f6f8fa;
+    --winter-accent: #b3c7e6;
+    --winter-card: #eef2f7;
+    --winter-text: #2e3a4d;
+    --winter-shadow: 0 4px 24px rgba(179, 199, 230, 0.08);
+
+    /* All/Neutral */
+    --all-accent: #b7b7b7;
+    --all-card: #f5f5f5;
+    --all-shadow: 0 4px 24px rgba(180,180,180,0.08);
+
+    /* Shared */
+    --radius: 18px;
+    --transition: 0.5s cubic-bezier(.7,.2,.2,1);
+    --tab-height: 38px;
+
+    /* Dark Mode */
+    --dark-accent: #f7a8c8;
+}
+
+body, #app, input, textarea, button, h1, h2, h3, h4, h5, h6, label, .season-label, .season-tab, .lyric-card, .song-name, .lyric-meta, .delete-btn, .tag-chip {
+  font-family: "SF Pro Rounded", "SF Pro Rounded Regular", "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  transition: background 1.2s cubic-bezier(.7,.2,.2,1);
+  background: var(--spring-bg);
+  color: var(--spring-text);
+  }
+  
+  main {
+  max-width: 900px;
+  width: 96vw;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: none;
+  padding: 32px 32px 24px 32px;
+  transition: background var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: visible;
+}
+
+#app-title {
+  font-size: 2.1rem;
+  font-weight: 700;
+    text-align: center;
+  margin-bottom: 28px;
+    letter-spacing: 0.5px;
+  transition: color var(--transition);
+  }
+  
+  #input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  margin-bottom: 18px;
+  background: var(--spring-card);
+  border-radius: 8px;
+  padding: 14px 12px 10px 12px;
+  box-shadow: var(--spring-shadow);
+  transition: background var(--transition), box-shadow var(--transition);
+  overflow: visible;
+}
+
+.song-artist-row {
+  display: flex;
+  gap: 10px;
+}
+.song-artist-row input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#input-area textarea,
+#input-area input {
+  font-size: 1.1rem;
+  border: none;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #fff;
+  color: inherit;
+  transition: box-shadow 0.18s, background 0.18s;
+    outline: none;
+    resize: none;
+  box-shadow: 0 1px 2px rgba(125,207,167,0.03);
+}
+
+#input-area textarea:focus,
+#input-area input:focus {
+  background: var(--spring-bg);
+  box-shadow: 0 2px 12px rgba(125,207,167,0.10);
+}
+
+#input-area textarea::placeholder,
+#input-area input::placeholder {
+  color: #b2b8c6;
+    opacity: 1;
+    font-style: italic;
+  }
+
+.season-select label {
+  font-size: 1em;
+  color: #8fa7a0;
+  margin-bottom: 4px;
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.season-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.season-btn {
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 2em;
+  box-shadow: 0 2px 16px 4px rgba(180,180,180,0.10);
+  padding: 0.6em 1.2em;
+  margin: 0 0.3em;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition:
+    background 0.22s cubic-bezier(.7,.2,.2,1),
+    box-shadow 0.22s cubic-bezier(.7,.2,.2,1),
+    transform 0.18s cubic-bezier(.7,.2,.2,1);
+  outline: none;
+  position: relative;
+}
+
+.season-btn.selected {
+  /* Soft fill for selected, faded border using box-shadow */
+  background: var(--season-btn-bg, #f7faf7);
+  box-shadow: 0 0 0 4px var(--season-btn-shadow, rgba(0,0,0,0.07));
+}
+
+.season-btn.spring:hover,
+.season-btn.spring.selected {
+  background: rgba(125, 207, 167, 0.22);
+  box-shadow: 0 0 24px 6px rgba(125, 207, 167, 0.13);
+  transform: scale(1.06);
+}
+.season-btn.summer:hover,
+.season-btn.summer.selected {
+  background: rgba(247, 168, 200, 0.22);
+  box-shadow: 0 0 24px 6px rgba(247, 168, 200, 0.13);
+  transform: scale(1.06);
+}
+.season-btn.autumn:hover,
+.season-btn.autumn.selected {
+  background: rgba(230, 185, 122, 0.22);
+  box-shadow: 0 0 24px 6px rgba(230, 185, 122, 0.13);
+  transform: scale(1.06);
+}
+.season-btn.winter:hover,
+.season-btn.winter.selected {
+  background: rgba(179, 199, 230, 0.22);
+  box-shadow: 0 0 24px 6px rgba(179, 199, 230, 0.13);
+  transform: scale(1.06);
+}
+
+.season-emoji {
+  font-size: 1.2em;
+  line-height: 1;
+}
+.season-label {
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+  
+  #save-btn {
+  font-size: 1.2rem;
+    font-weight: 700;
+  background: var(--spring-accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 0;
+    margin-top: 2px;
+    cursor: pointer;
+  box-shadow: 0 2px 12px rgba(125,207,167,0.08);
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  transition: background var(--transition), transform 0.12s, box-shadow 0.18s;
+    outline: none;
+    will-change: transform;
+    z-index: 1;
+  }
+  #save-btn:active {
+    transform: scale(0.97);
+  }
+  #save-btn:hover,
+  #save-btn:focus {
+  background: #5bbd8a;
+  box-shadow: 0 4px 24px rgba(125,207,167,0.13);
+}
+
+.season-tabs {
+  display: flex;
+  gap: 0;
+  margin: 0 0 10px 0;
+  position: relative;
+  border-radius: 10px;
+  background: var(--spring-card);
+  box-shadow: var(--spring-shadow);
+  transition: background var(--transition), box-shadow var(--transition);
+  overflow: hidden;
+  height: var(--tab-height);
+}
+.season-tab {
+  flex: 1 1 0;
+  background: none;
+  border: none;
+  font-size: 1.08em;
+  font-weight: 700;
+  color: #b2b8c6;
+  padding: 0;
+  height: var(--tab-height);
+  cursor: pointer;
+  transition: color 0.18s;
+  position: relative;
+    z-index: 1;
+  }
+.season-tab.active {
+  color: var(--spring-accent);
+}
+.season-tab[data-season="all"].active {
+  color: var(--all-accent);
+}
+.tab-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 20%;
+  background: var(--spring-accent);
+  border-radius: 2px 2px 0 0;
+  transition: left var(--transition), background var(--transition);
+  z-index: 2;
+}
+.tab-underline.all {
+  background: var(--all-accent);
+}
+
+.tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  margin-bottom: 10px;
+    min-height: 24px;
+  }
+.tag-chip {
+  background: var(--soft, #e6e8f0);
+  color: var(--primary, #2d314d);
+    border-radius: 7px;
+    padding: 4px 14px 4px 12px;
+  font-size: 1em;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    font-weight: 600;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    box-shadow: 0 1px 2px rgba(161,138,255,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+.tag-chip.active,
+.tag-chip:hover {
+  background: var(--spring-accent);
+    color: #fff;
+  }
+  
+  #lyric-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  min-height: 60px;
+  }
+  
+  .lyric-card {
+  background: var(--spring-card);
+  border-radius: 8px;
+  box-shadow: var(--spring-shadow);
+  padding: 12px 16px 10px 16px;
+  border-left: 5px solid var(--spring-accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(32px) scale(0.98);
+    animation: cardIn 0.7s cubic-bezier(.4,1.4,.6,1) forwards;
+    will-change: opacity, transform;
+  }
+.lyric-card.spring {
+  background: var(--spring-card);
+  border-left: 5px solid var(--spring-accent);
+  box-shadow: var(--spring-shadow);
+  color: var(--spring-text);
+}
+.lyric-card.summer {
+  background: var(--summer-card);
+  border-left: 5px solid var(--summer-accent);
+  box-shadow: var(--summer-shadow);
+  color: var(--summer-text);
+}
+.lyric-card.autumn {
+  background: var(--autumn-card);
+  border-left: 5px solid var(--autumn-accent);
+  box-shadow: var(--autumn-shadow);
+  color: var(--autumn-text);
+}
+.lyric-card.winter {
+  background: var(--winter-card);
+  border-left: 5px solid var(--winter-accent);
+  box-shadow: var(--winter-shadow);
+  color: var(--winter-text);
+}
+  @keyframes cardIn {
+    0% {
+      opacity: 0;
+      transform: translateY(32px) scale(0.98);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-6px) scale(1.01);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .lyric-card.deleting {
+    animation: cardOut 0.45s cubic-bezier(.4,1.4,.6,1) forwards;
+  }
+  @keyframes cardOut {
+    to {
+      opacity: 0;
+      transform: translateX(60px) rotateZ(8deg) scale(0.95);
+    }
+  }
+  .lyric-text {
+    font-size: 1.13rem;
+    font-weight: 600;
+  color: inherit;
+    margin: 0 0 2px 0;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+  .song-name {
+    font-size: 1.01rem;
+  color: inherit;
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: 0.2px;
+  }
+.artist-name {
+  color: #b2b8c6;
+  font-size: 1em;
+  font-weight: 500;
+  margin-left: 6px;
+}
+  .lyric-meta {
+    font-size: 0.97em;
+  color: #b2b8c6;
+    margin-top: 2px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .lyric-meta span {
+  color: #b2b8c6;
+    font-size: 0.97em;
+  }
+  .delete-btn {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.16s, transform 0.18s;
+    opacity: 0.7;
+    z-index: 2;
+  }
+  .delete-btn:hover,
+  .delete-btn:focus {
+  background: var(--spring-bg);
+    opacity: 1;
+    transform: rotate(-12deg) scale(1.08);
+  }
+  .delete-btn svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  fill: #b2b8c6;
+    transition: fill 0.16s;
+  }
+  .delete-btn:hover svg,
+  .delete-btn:focus svg {
+  fill: #e57373;
+}
+
+/* --- Dynamic Theming for Each Season --- */
+body.spring, main.spring, #input-area.spring, .season-btn.selected.spring, .season-tabs.spring, .tab-underline.spring, .lyric-card.spring, .song-name.spring, #app-title.spring {
+  background: var(--spring-bg) !important;
+  color: var(--spring-text) !important;
+  box-shadow: var(--spring-shadow) !important;
+}
+.season-btn.selected.spring, .season-tab.active.spring, .tab-underline.spring, .song-name.spring, #app-title.spring {
+  color: var(--spring-accent) !important;
+  background: var(--spring-bg) !important;
+  border-color: var(--spring-accent) !important;
+}
+#save-btn.spring {
+  background: var(--spring-accent) !important;
+}
+.lyric-card.spring {
+  border-left: 5px solid var(--spring-accent) !important;
+}
+
+/* Summer */
+body.summer, main.summer, #input-area.summer, .season-btn.selected.summer, .season-tabs.summer, .tab-underline.summer, .lyric-card.summer, .song-name.summer, #app-title.summer {
+  background: var(--summer-bg) !important;
+  color: var(--summer-text) !important;
+  box-shadow: var(--summer-shadow) !important;
+}
+.season-btn.selected.summer, .season-tab.active.summer, .tab-underline.summer, .song-name.summer, #app-title.summer {
+  color: var(--summer-accent) !important;
+  background: var(--summer-bg) !important;
+  border-color: var(--summer-accent) !important;
+}
+#save-btn.summer {
+  background: var(--summer-accent) !important;
+}
+.lyric-card.summer {
+  border-left: 5px solid var(--summer-accent) !important;
+}
+
+/* Autumn */
+body.autumn, main.autumn, #input-area.autumn, .season-btn.selected.autumn, .season-tabs.autumn, .tab-underline.autumn, .lyric-card.autumn, .song-name.autumn, #app-title.autumn {
+  background: var(--autumn-bg) !important;
+  color: var(--autumn-text) !important;
+  box-shadow: var(--autumn-shadow) !important;
+}
+.season-btn.selected.autumn, .season-tab.active.autumn, .tab-underline.autumn, .song-name.autumn, #app-title.autumn {
+  color: var(--autumn-accent) !important;
+  background: var(--autumn-bg) !important;
+  border-color: var(--autumn-accent) !important;
+}
+#save-btn.autumn {
+  background: var(--autumn-accent) !important;
+}
+.lyric-card.autumn {
+  border-left: 5px solid var(--autumn-accent) !important;
+}
+
+/* Winter */
+body.winter, main.winter, #input-area.winter, .season-btn.selected.winter, .season-tabs.winter, .tab-underline.winter, .lyric-card.winter, .song-name.winter, #app-title.winter {
+  background: var(--winter-bg) !important;
+  color: var(--winter-text) !important;
+  box-shadow: var(--winter-shadow) !important;
+}
+.season-btn.selected.winter, .season-tab.active.winter, .tab-underline.winter, .song-name.winter, #app-title.winter {
+  color: var(--winter-accent) !important;
+  background: var(--winter-bg) !important;
+  border-color: var(--winter-accent) !important;
+}
+#save-btn.winter {
+  background: var(--winter-accent) !important;
+}
+.lyric-card.winter {
+  border-left: 5px solid var(--winter-accent) !important;
+}
+
+/* Responsive */
+  @media (max-width: 600px) {
+    main {
+    max-width: 100vw;
+    padding: 10px 2vw 10px 2vw;
+    }
+    #input-area {
+    padding: 8px 4px 6px 4px;
+    }
+    .lyric-card {
+    padding: 8px 4px 6px 8px;
+  }
+  .song-artist-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+body.dark {
+  background: #18171c;
+  color: #f3e9f7;
+}
+body.dark main {
+  background: #23212b;
+  color: #f3e9f7;
+}
+body.dark #input-area,
+body.dark .season-tabs,
+body.dark .lyric-card,
+body.dark .season-group {
+  background: #23212b !important;
+  color: #f3e9f7 !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
+}
+body.dark .season-btn.selected,
+body.dark .season-tab.active,
+body.dark .tab-underline,
+body.dark .song-name,
+body.dark #app-title {
+  color: var(--dark-accent, #f7a8c8) !important;
+  background: #23212b !important;
+  border-color: var(--dark-accent, #f7a8c8) !important;
+}
+body.dark #save-btn {
+  background: var(--dark-accent, #f7a8c8) !important;
+  color: #23212b !important;
+}
+body.dark .lyric-card.spring { border-left: 5px solid #8be3b0 !important; }
+body.dark .lyric-card.summer { border-left: 5px solid #f7a8c8 !important; }
+body.dark .lyric-card.autumn { border-left: 5px solid #e6b97a !important; }
+body.dark .lyric-card.winter { border-left: 5px solid #b3c7e6 !important; }
+
+.landing-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floating-icon {
+  position: absolute;
+  font-size: 3.5rem;
+  opacity: 0.18;
+  animation: floatY 6s cubic-bezier(.5,1.7,.5,1) infinite alternate;
+  will-change: transform;
+}
+.floating-icon.spring { color: var(--spring-accent); }
+.floating-icon.summer { color: var(--summer-accent); }
+.floating-icon.autumn { color: var(--autumn-accent); }
+.floating-icon.winter { color: var(--winter-accent); }
+
+@keyframes floatY {
+  0% { transform: translateY(0) scale(1);}
+  100% { transform: translateY(-40px) scale(1.08);}
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.landing-title {
+  font-size: 2.8rem;
+  margin-bottom: 0.5em;
+  letter-spacing: 0.04em;
+}
+
+.landing-prompt {
+  font-size: 1.5rem;
+  margin-bottom: 2em;
+  color: #888;
+}
+
+.landing-actions {
+  display: flex;
+  gap: 2.5em;
+  margin-bottom: 2em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.landing-btn {
+  font-family: inherit;
+  font-size: 1.3rem;
+  background: #fff;
+  border: none;
+  border-radius: 2em;
+  padding: 0.7em 2.2em;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+  color: #444;
+  outline: none;
+}
+.landing-btn:hover {
+  background: #f7f7f7;
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+}
+
+.landing-seasons {
+  display: flex;
+  gap: 2.5em;
+  margin-top: 2em;
+  justify-content: center;
+}
+.landing-season {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.18s;
+}
+.landing-season:hover {
+  transform: scale(1.08) translateY(-6px);
+}
+.landing-season-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 0.2em;
+}
+.landing-season-label {
+  font-size: 1.1rem;
+  color: #888;
+}
+
+.season-page {
+  min-height: 100vh;
+  width: 100vw;
+  background: var(--spring-bg);
+  transition: background 0.7s;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 60px;
+}
+.season-page.summer { background: var(--summer-bg); }
+.season-page.autumn { background: var(--autumn-bg); }
+.season-page.winter { background: var(--winter-bg); }
+.season-page.spring { background: var(--spring-bg); }
+
+.season-header {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-top: 1.2em;
+  margin-bottom: 0.2em;
+  letter-spacing: 0.04em;
+}
+.season-back {
+  position: absolute;
+  left: 2vw;
+  top: 2vw;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.18s;
+}
+.season-back:hover { color: #222; }
+
+.floating-lyrics-area {
+  position: relative;
+  min-height: 60vh;
+  width: 100vw;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+  z-index: 1;
+}
+
+.floating-lyric-card {
+  position: absolute;
+  min-width: 220px;
+  max-width: 320px;
+  background: #fff;
+  border-radius: 1.5em;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 1.2em 1.5em 1em 1.5em;
+  border-left: 5px solid var(--spring-accent);
+  color: #222;
+  animation: floatCard 7s cubic-bezier(.5,1.7,.5,1) infinite alternate;
+  transition: box-shadow 0.18s, transform 0.18s;
+  will-change: transform;
+  cursor: pointer;
+  opacity: 0.97;
+}
+.floating-lyric-card.spring { border-left-color: var(--spring-accent); }
+.floating-lyric-card.summer { border-left-color: var(--summer-accent); }
+.floating-lyric-card.autumn { border-left-color: var(--autumn-accent); }
+.floating-lyric-card.winter { border-left-color: var(--winter-accent); }
+.floating-lyric-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+  transform: scale(1.04) translateY(-8px);
+  opacity: 1;
+}
+@keyframes floatCard {
+  0% { transform: translateY(0) scale(1);}
+  100% { transform: translateY(-24px) scale(1.04);}
+}
+
+.floating-lyric-song {
+  font-size: 1.1rem;
+  color: #888;
+  margin-bottom: 0.2em;
+}
+.floating-lyric-text {
+  font-size: 1.3rem;
+  margin-bottom: 0.5em;
+}
+.floating-lyric-meta {
+  font-size: 0.9rem;
+  color: #bbb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.floating-lyric-delete {
+  background: none;
+  border: none;
+  color: #bbb;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.18s;
+}
+.floating-lyric-delete:hover { color: #e57373; }
+
+.add-emoji-btn {
+  display: inline-block;
+  font-size: 4rem;
+  line-height: 1;
+  cursor: pointer;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  transition: transform 0.12s;
+  user-select: none;
+}
+.add-emoji-btn:focus {
+  outline: none;
+}
+.add-emoji-btn:hover {
+  transform: scale(1.08);
+}
+
+.add-lyric-btn {
+  display: block;
+  margin: 2em auto 0 auto;
+  font-size: 1.2rem;
+  background: #fff;
+  border: none;
+  border-radius: 2em;
+  padding: 0.7em 2.2em;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+  color: #444;
+  outline: none;
+}
+.add-lyric-btn:hover {
+  background: #f7f7f7;
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+}
+
+.add-lyric-modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.18);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-lyric-modal {
+  background: #fff;
+  border-radius: 1.5em;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 2em 2.5em 1.5em 2.5em;
+  min-width: 320px;
+  max-width: 90vw;
+  position: relative;
+  animation: bubbleModalIn 0.6s cubic-bezier(.5,1.7,.5,1) both;
+}
+.add-lyric-modal-close {
+  position: absolute;
+  right: -1.2em;
+  top: -1.2em;
+  background: none !important;
+  border: none !important;
+  font-size: 2rem;
+  color: #bbb;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  z-index: 2;
+  transition: color 0.18s;
+  box-shadow: none !important;
+}
+.add-lyric-modal-close:hover,
+.add-lyric-modal-close:focus {
+  color: #e57373;
+  background: none !important;
+  border: none !important;
+  outline: none;
+  box-shadow: none !important;
+}
+.add-lyric-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.add-lyric-form input,
+.add-lyric-form textarea {
+  font-family: inherit;
+  font-size: 1.1rem;
+  border: none !important;
+  border-radius: 0;
+  background: none !important;
+  color: #222;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0.7em 0 0.7em 0;
+  margin: 0;
+  transition: none !important;
+  resize: none;
+  border-bottom: 1.5px solid #eee;
+}
+
+.add-lyric-form input:focus,
+.add-lyric-form textarea:focus {
+  border-bottom: 1.5px solid #bbb;
+}
+
+.add-lyric-form button[type="submit"] {
+  font-family: inherit;
+  font-size: 1.1rem;
+  background: #fff;
+  border: none;
+  border-radius: 2em;
+  padding: 0.7em 2.2em;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+  color: #444;
+  outline: none;
+}
+.add-lyric-form button[type="submit"]:hover {
+  background: #f7f7f7;
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+}
+
+.group-title {
+  font-size: 1.2rem;
+  color: #bbb;
+  margin: 2em 0 1em 0.5em;
+  letter-spacing: 0.04em;
+}
+
+/* Bubble fade for page transitions */
+.bubble-fade-in {
+  animation: bubbleFadeIn 0.7s cubic-bezier(.5,1.7,.5,1) both;
+}
+.bubble-fade-out {
+  animation: bubbleFadeOut 0.5s cubic-bezier(.5,1.7,.5,1) both;
+}
+
+@keyframes bubbleFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(40px);
+    filter: blur(12px);
+    border-radius: 60px;
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-8px);
+    filter: blur(0px);
+    border-radius: 30px;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+    border-radius: 18px;
+  }
+}
+@keyframes bubbleFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+    border-radius: 18px;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7) translateY(40px);
+    filter: blur(12px);
+    border-radius: 60px;
+  }
+}
+
+/* Modal bubble pop */
+.bubble-modal-in {
+  animation: bubbleModalIn 0.6s cubic-bezier(.5,1.7,.5,1) both;
+}
+.bubble-modal-out {
+  animation: bubbleModalOut 0.4s cubic-bezier(.5,1.7,.5,1) both;
+}
+@keyframes bubbleModalIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(60px);
+    filter: blur(10px);
+    border-radius: 60px;
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-10px);
+    filter: blur(0px);
+    border-radius: 30px;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+    border-radius: 24px;
+  }
+}
+@keyframes bubbleModalOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+    border-radius: 24px;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) translateY(60px);
+    filter: blur(10px);
+    border-radius: 60px;
+  }
+}
+
+body, #app {
+  transition: background 1.2s cubic-bezier(.7,.2,.2,1);
+}
+
+.landing-bg-anim {
+  transition: background 1.2s cubic-bezier(.7,.2,.2,1);
+}
+
+/* General soft button style */
+button,
+input[type="button"],
+input[type="submit"] {
+  font-family: inherit;
+  border: none;
+  border-radius: 2em;
+  background: #fff;
+  color: #444;
+  box-shadow: 0 2px 16px 4px rgba(180,180,180,0.10), 0 1.5px 8px 0 rgba(180,180,180,0.08);
+  padding: 0.7em 2.2em;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition:
+    background 0.22s cubic-bezier(.7,.2,.2,1),
+    box-shadow 0.22s cubic-bezier(.7,.2,.2,1),
+    transform 0.18s cubic-bezier(.7,.2,.2,1);
+  outline: none;
+  position: relative;
+}
+
+/* Cloudy hover and active effect */
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+  background: #f7f7fa;
+  box-shadow:
+    0 6px 32px 8px rgba(180,180,180,0.16),
+    0 2px 12px 0 rgba(180,180,180,0.10);
+  transform: scale(1.04) translateY(-2px);
+}
+
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active {
+  background: #f0f0f5;
+  box-shadow:
+    0 2px 8px 2px rgba(180,180,180,0.10),
+    0 1px 4px 0 rgba(180,180,180,0.08);
+  transform: scale(0.97) translateY(1px);
+}
+
+/* Remove default focus outline, add soft glow */
+button:focus,
+input[type="button"]:focus,
+input[type="submit"]:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 6px rgba(180,180,255,0.13),
+    0 2px 16px 4px rgba(180,180,180,0.10);
+}
+
+/* Inputs: soft, pillowy, no rigid border */
+input,
+textarea {
+  font-family: inherit;
+  border: none;
+  border-radius: 2em;
+  background: #fff;
+  color: #444;
+  box-shadow: 0 2px 16px 4px rgba(180,180,180,0.10);
+  padding: 0.7em 1.5em;
+  font-size: 1.1rem;
+  transition:
+    background 0.22s cubic-bezier(.7,.2,.2,1),
+    box-shadow 0.22s cubic-bezier(.7,.2,.2,1);
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  background: #f7f7fa;
+  box-shadow:
+    0 0 0 6px rgba(180,180,255,0.13),
+    0 2px 16px 4px rgba(180,180,180,0.10);
+}
+
+/* Remove rigid outlines for all buttons/inputs */
+button, input, textarea {
+  outline: none !important;
+}
+
+.loading-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: transparent;
+}
+
+.loading-emoji {
+  font-size: 6rem;
+  display: block;
+  text-align: center;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.fade-mix-enter {
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(.7,.2,.2,1);
+}
+.fade-mix-enter.fade-mix-enter-active {
+  opacity: 1;
+}
+
+.fade-mix-exit {
+  opacity: 1;
+  transition: opacity 0.4s cubic-bezier(.7,.2,.2,1);
+}
+.fade-mix-exit.fade-mix-exit-active {
+  opacity: 0;
+}
+
+.page-fade {
+  transition: opacity 0.32s cubic-bezier(.7,.2,.2,1), filter 0.32s cubic-bezier(.7,.2,.2,1);
+  opacity: 1;
+  filter: blur(0);
+}
+
+.page-fade-out {
+  opacity: 0;
+  filter: blur(12px);
+  pointer-events: none;
+  }
