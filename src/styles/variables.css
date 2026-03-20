@@ -1,0 +1,82 @@
+:root {
+  /* Spacing (8px grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Colors — Backgrounds */
+  --color-bg: #EDE8DE;
+  --color-surface: #F5F0E8;
+
+  /* Colors — Primary */
+  --color-primary: #8B2020;
+  --color-primary-light: #A83232;
+  --color-primary-dark: #6B1818;
+
+  /* Colors — Accent */
+  --color-accent: #C9A84C;
+  --color-accent-light: #D9BC6E;
+
+  /* Colors — Text */
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #6B4C3B;
+  --color-text-muted: #9A8B7A;
+
+  /* Colors — Semantic */
+  --color-error: #B33A3A;
+  --color-success: #4A8B4A;
+
+  /* Colors — Seasons */
+  --color-spring: #7A9E7E;
+  --color-summer: #C94040;
+  --color-autumn: #C47A3A;
+  --color-winter: #5A7A9E;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-handwriting: 'Over the Rainbow', cursive;
+  --font-ui: 'Courier Prime', 'Courier New', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-base: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.6rem;
+  --text-2xl: 2.4rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* Animation — durations */
+  --animation-fast: 0.2s;
+  --animation-normal: 0.4s;
+  --animation-slow: 0.6s;
+  --animation-slower: 0.8s;
+
+  /* Animation — steps (stop-motion ONLY) */
+  --steps-micro: steps(4, end);
+  --steps-fast: steps(6, end);
+  --steps-normal: steps(8, end);
+  --steps-slow: steps(10, end);
+  --steps-slower: steps(12, end);
+
+  /* Shadows */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lifted: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Borders */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* Safe areas */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

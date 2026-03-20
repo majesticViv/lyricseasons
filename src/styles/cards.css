@@ -1,0 +1,82 @@
+/* Card backgrounds */
+
+.bg-cream {
+  background: var(--color-surface);
+}
+
+.bg-gingham-red {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      rgba(201, 64, 64, 0.15) 10px,
+      rgba(201, 64, 64, 0.15) 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 10px,
+      rgba(201, 64, 64, 0.15) 10px,
+      rgba(201, 64, 64, 0.15) 20px
+    ),
+    var(--color-surface);
+}
+
+.bg-gingham-blue {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      rgba(90, 122, 158, 0.15) 10px,
+      rgba(90, 122, 158, 0.15) 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 10px,
+      rgba(90, 122, 158, 0.15) 10px,
+      rgba(90, 122, 158, 0.15) 20px
+    ),
+    var(--color-surface);
+}
+
+.bg-grid {
+  background:
+    linear-gradient(rgba(90, 122, 158, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 122, 158, 0.1) 1px, transparent 1px),
+    var(--color-surface);
+  background-size: 20px 20px;
+}
+
+.bg-lined {
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent 23px,
+      rgba(90, 122, 158, 0.15) 23px,
+      rgba(90, 122, 158, 0.15) 24px
+    ),
+    var(--color-surface);
+}
+
+.bg-night {
+  background: #1A1A2E;
+}
+
+.bg-amber {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    var(--color-surface) 0%,
+    rgba(196, 122, 58, 0.2) 100%
+  );
+}
+
+.bg-sage {
+  background: radial-gradient(
+    ellipse at 70% 70%,
+    var(--color-surface) 0%,
+    rgba(122, 158, 126, 0.2) 100%
+  );
+}

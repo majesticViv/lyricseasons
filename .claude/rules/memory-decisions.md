@@ -1,0 +1,12 @@
+# Past Decisions
+- Season stamps baked into envelope images (no separate labels)
+- 4 closed envelopes + 4 shared opening frames (Option A)
+- Add View: letter paper slides up, no typewriter
+- Season selection: tap postage stamp to cycle
+- No song_link field
+- No delete functionality in v1
+- Gramophone: no text label, just icon
+- Card image: single card.png (804×1230), horizontal = rotated 90deg
+- Lyric <150 chars → horizontal card, 150+ → vertical card
+- Browse View: 2 cards per page, sorted short/long alternating
+- Safe text area: vertical 10%/11.4% inset, horizontal 11.4%/10% inset

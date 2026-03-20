@@ -1,0 +1,601 @@
+/* ============================================
+   Lyric Card — card.png based (804×1230)
+   Vertical = normal, Horizontal = rotated 90deg
+   ============================================ */
+
+.lyric-card {
+  position: relative;
+  cursor: pointer;
+}
+
+/* --- Card image --- */
+.lyric-card__img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* Vertical card: portrait aspect ratio */
+.lyric-card--vertical {
+  aspect-ratio: 804 / 1230;
+}
+
+.lyric-card--vertical .lyric-card__img {
+  object-fit: contain;
+}
+
+/* Horizontal card: landscape aspect ratio (rotated image)
+   Image is 804×1230 portrait. We rotate it 90deg to get landscape 1230×804.
+   Container aspect ratio = 1230/804. Image sized to container height (which
+   becomes its width after rotation), then rotated to fill. */
+.lyric-card--horizontal {
+  aspect-ratio: 1230 / 804;
+  overflow: hidden;
+}
+
+.lyric-card--horizontal .lyric-card__img {
+  position: absolute;
+  /* Image is 804×1230 portrait. Container is 1230/804 landscape.
+     After 90deg rotation: visual width = img height, visual height = img width.
+     We need img height = container width. Since height% = % of container height,
+     and container width = container height × 1230/804, set height to 1230/804 × 100%. */
+  height: calc(100% * 1230 / 804);
+  width: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* --- Text safe area ---
+   Vertical: inset 80px/140px of 804×1230 → 10% L/R, 11.4% T/B
+   Horizontal (rotated): inset 140px/80px of 1230×804 → 11.4% L/R, 10% T/B
+   Extra padding inside so text doesn't hug the lace border edge.
+*/
+.lyric-card__content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow: hidden;
+  padding: 8% 6%;
+}
+
+.lyric-card--vertical .lyric-card__content {
+  left: 13%;
+  right: 13%;
+  top: 14%;
+  bottom: 14%;
+}
+
+.lyric-card--horizontal .lyric-card__content {
+  left: 14%;
+  right: 14%;
+  top: 13%;
+  bottom: 13%;
+}
+
+/* --- Typography --- */
+.lyric-card__lyric {
+  font-family: var(--font-handwriting);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+  white-space: pre-line;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 10;
+}
+
+/* Horizontal browse cards — clamp to fewer lines */
+.lyric-card--horizontal .lyric-card__lyric {
+  -webkit-line-clamp: 3;
+}
+
+/* Song/artist anchored to bottom — always separated from lyric */
+.lyric-card__song-group {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lyric-card__song {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.lyric-card__artist {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.lyric-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--space-1);
+}
+
+.lyric-card__date {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.lyric-card__seal {
+  position: absolute;
+  bottom: 17%;
+  right: 18%;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ============================================
+   Sticker Buttons
+   Functional navigation buttons — will be images.
+   ============================================ */
+
+.sticker-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: var(--space-2);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--animation-fast) var(--steps-micro);
+  z-index: 10;
+}
+
+.sticker-btn:hover {
+  transform: scale(1.08);
+}
+
+.sticker-btn:active {
+  transform: scale(0.95);
+}
+
+.sticker-btn__img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Back sticker — matches add-view__back exactly (no container styling, 64px img) */
+.sticker-btn--back {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--space-2);
+}
+
+.sticker-btn--back:hover {
+  transform: scale(1.06);
+}
+
+.sticker-btn--back:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+  transform: none;
+}
+
+.sticker-btn--back .sticker-btn__img {
+  width: 64px;
+  height: 64px;
+}
+
+/* Prev/Next page stickers — no container styling, image only */
+.sticker-btn--prev-page,
+.sticker-btn--next-page {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--space-2);
+}
+
+.sticker-btn--prev-page:hover,
+.sticker-btn--next-page:hover {
+  transform: inherit;
+}
+
+.sticker-btn--prev-page:active,
+.sticker-btn--next-page:active {
+  animation: none;
+  transform: inherit;
+}
+
+.sticker-btn--prev-page .sticker-btn__img,
+.sticker-btn--next-page .sticker-btn__img {
+  width: 48px;
+  height: 48px;
+}
+
+.sticker-btn__placeholder {
+  font-family: var(--font-ui);
+  font-size: var(--text-lg);
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+/* ============================================
+   Browse View — 2 cards per page
+   Upper card (horizontal) + lower card (vertical), overlapping.
+   ============================================ */
+
+.browse-view {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.browse-view__background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.browse-view--spring .browse-view__background { background-image: url('/images/bg-spring.jpg'); }
+.browse-view--summer .browse-view__background { background-image: url('/images/bg-summer.jpg'); }
+.browse-view--autumn .browse-view__background { background-image: url('/images/bg-autumn.jpg'); }
+.browse-view--winter .browse-view__background { background-image: url('/images/bg-winter.jpg'); }
+
+.browse-view__content-layer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.browse-view__back {
+  position: absolute;
+  top: calc(var(--space-5) + var(--safe-top));
+  left: var(--space-5);
+}
+
+/* Cards area — stacked vertically with gap */
+.browse-view__cards {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: calc(100px + var(--safe-top));
+  padding-bottom: calc(80px + var(--safe-bottom));
+  gap: 24px;
+}
+
+/* Individual cards in browse */
+.browse-view__card {
+  position: relative;
+}
+
+/* Upper card (typically horizontal): sits in upper portion */
+.browse-view__card--upper {
+  width: 75vw;
+  max-width: 320px;
+  z-index: 1;
+}
+
+/* Lower card (typically vertical): overlaps upper slightly */
+.browse-view__card--lower {
+  width: 48vw;
+  max-width: 200px;
+  z-index: 2;
+  margin-top: 0;
+}
+
+.browse-view__prev,
+.browse-view__next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+
+.browse-view__prev:hover,
+.browse-view__next:hover {
+  transform: translateY(-50%) scale(1.06);
+}
+
+.browse-view__prev:active,
+.browse-view__next:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.browse-view__prev {
+  left: var(--space-3);
+}
+
+.browse-view__next {
+  right: var(--space-3);
+}
+
+.browse-view__empty {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.browse-view__error {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-7);
+}
+
+/* ============================================
+   Single Card View — one card centered, bigger
+   ============================================ */
+
+.single-card-view {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.single-card-view__background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.single-card-view--spring .single-card-view__background { background-image: url('/images/bg-spring.jpg'); }
+.single-card-view--summer .single-card-view__background { background-image: url('/images/bg-summer.jpg'); }
+.single-card-view--autumn .single-card-view__background { background-image: url('/images/bg-autumn.jpg'); }
+.single-card-view--winter .single-card-view__background { background-image: url('/images/bg-winter.jpg'); }
+
+.single-card-view__content-layer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.single-card-view__back {
+  position: absolute;
+  top: calc(var(--space-5) + var(--safe-top));
+  left: var(--space-5);
+}
+
+.single-card-view__pen {
+  position: absolute;
+  bottom: calc(var(--space-7) + var(--safe-bottom));
+  right: var(--space-7);
+}
+
+/* Single card — fills most of screen width */
+.single-card-view__card {
+  position: relative;
+  z-index: 1;
+  cursor: default;
+}
+
+.single-card-view__card.lyric-card--vertical {
+  width: 85vw;
+  max-width: 380px;
+}
+
+.single-card-view__card.lyric-card--horizontal {
+  width: 92vw;
+  max-width: 440px;
+}
+
+/* Larger text in single card view — scrollable, no line clamp */
+.single-card-view__card .lyric-card__lyric {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  -webkit-line-clamp: unset;
+  overflow-y: auto;
+}
+
+.single-card-view__card .lyric-card__song,
+.single-card-view__card .lyric-card__artist {
+  font-size: var(--text-sm);
+}
+
+.single-card-view__card .lyric-card__date {
+  font-size: var(--text-xs);
+}
+
+/* ============================================
+   Add / Edit View — Letter paper overlay
+   Paper slides up from bottom over the landing page.
+   ============================================ */
+
+.add-view {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Back button — top-left, above paper */
+.add-view__back {
+  position: absolute;
+  top: calc(var(--space-5) + var(--safe-top));
+  left: var(--space-5);
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  pointer-events: auto;
+}
+
+.add-view__back:hover {
+  transform: scale(1.06);
+}
+
+.add-view__back:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+.add-view__back-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Save button — top-right, above paper */
+.add-view__save {
+  position: absolute;
+  top: calc(var(--space-5) + var(--safe-top));
+  right: var(--space-5);
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  pointer-events: auto;
+}
+
+.add-view__save:hover {
+  transform: scale(1.06);
+}
+
+.add-view__save:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+.add-view__save-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Letter paper — covers most of screen, gap at top */
+.add-view__paper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15vh;
+  bottom: 0;
+  z-index: 1;
+  background: url('/images/letter-paper.png') center/cover no-repeat;
+  background-color: var(--color-surface);
+  padding: var(--space-5) 10% calc(var(--space-7) + var(--safe-bottom)) 20%;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  overflow-y: auto;
+}
+
+/* Season stamp — top-right corner of paper, inside paper flow */
+.add-view__stamp {
+  align-self: flex-end;
+  margin-right: -2%;
+  margin-bottom: var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.add-view__stamp:hover {
+  transform: scale(1.06);
+}
+
+.add-view__stamp:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+.add-view__stamp-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Form fields */
+.add-view__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.add-view__lyric {
+  font-family: var(--font-handwriting);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-text-muted);
+  padding: var(--space-2) 0;
+  resize: none;
+  min-height: 120px;
+  outline: none;
+}
+
+.add-view__lyric::placeholder,
+.add-view__song::placeholder,
+.add-view__artist::placeholder {
+  color: var(--color-text-muted);
+}
+
+.add-view__song,
+.add-view__artist {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-text-muted);
+  padding: var(--space-2) 0;
+  outline: none;
+}
+
+.add-view__error {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  min-height: 1.2em;
+}

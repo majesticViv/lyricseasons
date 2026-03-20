@@ -1,0 +1,278 @@
+# 准时宝语录 — User Flow Document
+
+## Flow Diagram
+
+```
+[Identity Screen]
+    │
+    ├── Tap "Viv" or "Bili"
+    │
+    ▼
+[Landing - Stacked]
+    │
+    ├── Tap Envelope Stack ──────────────────┐
+    │                                        │
+    ├── Tap Pen ─────────────────────────────┼──► [Add View]
+    │                                        │
+    ├── Tap Gramophone ──► Opens Spotify     │
+    │                                        │
+    ▼                                        │
+[Landing - Distributed]  ◄───────────────────┘
+    │                         (back arrow)
+    ├── Tap Season Envelope
+    │
+    ▼
+[Season Options]
+    │
+    ├── Tap BROWSE ──────────────────────────┐
+    │                                        │
+    ├── Tap SURPRISE ME ─────────────────────┼──► [Single Card View]
+    │                                        │         │
+    ├── Tap × ──► Back to Distributed        │         ├── Tap Back ──► [Distributed]
+    │                                        │         │
+    ▼                                        │         ├── Tap Edit ──► [Edit View]
+[Browse View]  ◄─────────────────────────────┘         │
+    │                                                  │
+    ├── Tap Card ──► [Single Card View] ◄──────────────┘
+    │
+    ├── Tap Next Page Sticker ──► Next 3 cards
+    │
+    ├── Tap Prev Page Sticker ──► Previous 3 cards
+    │
+    ├── Tap Back Sticker ──► [Distributed]
+```
+
+---
+
+## Screen-by-Screen Details
+
+### Identity Screen
+
+```
+┌─────────────────────────────────┐
+│                                 │
+│                                 │
+│     ┌─────┐      ┌─────┐       │
+│     │     │      │     │       │
+│     │ Viv │      │Bili │       │
+│     │     │      │     │       │
+│     └─────┘      └─────┘       │
+│                                 │
+│                                 │
+└─────────────────────────────────┘
+
+- Tap either card
+- Stop-motion pop animation
+- Store choice in sessionStorage
+- Navigate to Landing (Stacked)
+```
+
+---
+
+### Landing - Stacked
+
+```
+┌─────────────────────────────────┐
+│                                 │
+│                                 │
+│                                 │
+│       ┌─────────┐               │
+│       │ 准时宝语录│    🖊️        │
+│       │ (stack) │   (pen)      │
+│       └─────────┘               │
+│                                 │
+│  🎺                             │
+│ (gramophone)                    │
+└─────────────────────────────────┘
+
+Interactions:
+- Tap stack → envelopes distribute (animation)
+- Tap pen → go to Add View
+- Tap gramophone → open Spotify in new tab
+```
+
+---
+
+### Landing - Distributed
+
+```
+┌─────────────────────────────────┐
+│  ←                              │
+│                                 │
+│     ┌─────┐    ┌─────┐         │
+│     │  春  │    │  夏  │         │
+│     └─────┘    └─────┘         │
+│     ┌─────┐    ┌─────┐         │
+│     │  秋  │    │  冬  │         │
+│     └─────┘    └─────┘         │
+│                          🖊️    │
+│  🎺                      (pen) │
+└─────────────────────────────────┘
+
+Interactions:
+- Tap ← → collapse back to stacked
+- Tap any season envelope → Season Options
+- Tap pen → go to Add View
+- Tap gramophone → open Spotify
+```
+
+---
+
+### Season Options
+
+```
+┌─────────────────────────────────┐
+│                                 │
+│                                 │
+│       ┌─────────────┐           │
+│       │  (opened    │           │
+│       │  envelope)  │           │
+│       │             │           │
+│       │ ┌─────────┐ │           │
+│       │ │ BROWSE  │ │           │
+│       │ │ ──────  │ │           │
+│       │ │SURPRISE │ │           │
+│       │ │   ME    │ │           │
+│       │ │ ──────  │ │           │
+│       │ │    ×    │ │           │
+│       │ └─────────┘ │           │
+│       └─────────────┘           │
+│                                 │
+└─────────────────────────────────┘
+
+Paper slip slides UP from inside envelope.
+Z-index: envelope front covers paper bottom edge.
+
+Interactions:
+- Tap BROWSE → go to Browse View
+- Tap SURPRISE ME → go to Single Card View (random card)
+- Tap × → paper slides down, envelope closes, return to Distributed
+```
+
+---
+
+### Browse View (Multiple Cards)
+
+```
+┌─────────────────────────────────┐
+│ ┌───────────────────────────┐   │
+│ │   ★(back)                 │   │
+│ │                           │   │
+│ │  ┌────┐ ┌────┐ ┌────┐    │   │
+│ │  │card│ │card│ │card│    │   │
+│ │  │ 1  │ │ 2  │ │ 3  │    │   │
+│ │  └────┘ └────┘ └────┘    │   │
+│ │                           │   │
+│ │  ★(prev)         ★(next) │   │
+│ │   (season collage bg)     │   │
+│ └───────────────────────────┘   │
+└─────────────────────────────────┘
+
+★ = sticker button (will be images)
+
+Cards show:
+- Lyric (preview/truncated)
+- Song title
+- Artist  
+- Date
+- Author stamp
+
+Interactions:
+- Tap card → Single Card View
+- Tap ★ back → return to Distributed (envelope grid)
+- Tap ★ prev → previous 3 cards (if exists)
+- Tap ★ next → next 3 cards (if exists)
+```
+
+---
+
+### Single Card View
+
+```
+┌─────────────────────────────────┐
+│ ┌───────────────────────────┐   │
+│ │  ★(back)         ★(edit)  │   │
+│ │                           │   │
+│ │       ┌──────────┐        │   │
+│ │       │          │        │   │
+│ │       │  lyric   │        │   │
+│ │       │  text    │        │   │
+│ │       │  here    │        │   │
+│ │       │          │        │   │
+│ │       │ Song     │        │   │
+│ │       │ Artist   │        │   │
+│ │       │ Date Stamp│       │   │
+│ │       └──────────┘        │   │
+│ │    (season collage bg)    │   │
+│ └───────────────────────────┘   │
+└─────────────────────────────────┘
+
+★ = sticker button
+
+Interactions:
+- Tap ★ back → return to Browse View (or Distributed if from Surprise Me)
+- Tap ★ edit → go to Edit View
+```
+
+---
+
+### Add View
+
+```
+┌─────────────────────────────────┐
+│  back                    enter  │
+│                                 │
+│         ┌───────────┐           │
+│         │           │           │
+│         │  Lyric    │           │
+│         │  ______   │           │
+│         │           │           │
+│         │  Song     │           │
+│         │  ______   │           │
+│         │           │           │
+│         │  Artist   │           │
+│         │  ______   │           │
+│         │           │           │
+│         └───────────┘           │
+│      (paper from typewriter)    │
+│  ┌─────────────────────────┐    │
+│  │      TYPEWRITER         │    │
+│  │   [春][夏][秋][冬]       │    │
+│  └─────────────────────────┘    │
+│         (background)            │
+└─────────────────────────────────┘
+
+3 layers (all will be images):
+1. Background
+2. Paper slip (editable area)
+3. Typewriter with season buttons
+
+Season buttons have pressed/unpressed states.
+
+Interactions:
+- Tap "back" → discard, return to Landing
+- Tap "enter" → save entry, return to Landing
+- Tap season button → select that season
+```
+
+---
+
+### Edit View
+
+Same as Add View, but:
+- Fields are pre-filled with existing entry data
+- "enter" updates the entry instead of creating new
+
+---
+
+## Animation Notes
+
+ALL major animations use JavaScript frameAnimation.ts at 12fps:
+- Envelope stack distribute/collapse
+- Pen movement
+- Envelope open (Season Options)
+- Paper slip slide up/down
+- Card transitions
+- Page transitions in Browse
+
+CSS steps() only for minor hover/active states.

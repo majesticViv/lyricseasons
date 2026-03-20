@@ -1,0 +1,466 @@
+/* Component styles — will be populated as components are built */
+
+body {
+  background: var(--color-bg);
+}
+
+#app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Focus states (accessibility) */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.on-dark:focus-visible {
+  outline-color: var(--color-surface);
+}
+
+/* ============================================
+   Identity Screen
+   ============================================ */
+
+.identity-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--space-4);
+  gap: var(--space-7);
+}
+
+/* Polaroid — stacked blank + photo images */
+.identity-polaroid {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 200px;
+}
+
+.identity-polaroid__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.identity-polaroid__photo {
+  position: absolute;
+  inset: 0;
+}
+
+.identity-polaroid:hover .identity-polaroid__img {
+  transform: scale(1.03);
+  transition: transform 0.1s steps(2, end);
+}
+
+.identity-polaroid:active .identity-polaroid__img {
+  transform: scale(0.97);
+  transition: transform 0.08s steps(2, end);
+}
+
+.identity-seals {
+  display: flex;
+  gap: var(--space-7);
+  align-items: center;
+  justify-content: center;
+}
+
+.identity-seal {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.identity-seal__img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.identity-seal__img--bili {
+  width: 105px;
+  height: 105px;
+}
+
+.identity-seal:hover {
+  transform: scale(1.06);
+  transition: transform 0.1s steps(2, end);
+}
+
+.identity-seal:active {
+  transform: scale(0.95);
+  transition: transform 0.08s steps(2, end);
+}
+
+.identity-seal--selected {
+  animation: stopPop 0.5s steps(8, end) both;
+}
+
+.identity-seal--disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ============================================
+   Landing Page
+   ============================================ */
+
+.landing {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: url('/images/bg-landing.jpg') center/cover no-repeat;
+}
+
+/* Pen: position driven by JS (animates between stack-side and bottom-right corner) */
+.landing__pen {
+  position: absolute;
+  z-index: 10;
+}
+
+/* Gramophone: fixed bottom-left */
+.landing__gramophone {
+  position: fixed;
+  bottom: calc(var(--space-7) + var(--safe-bottom));
+  left: var(--space-7);
+  z-index: 10;
+}
+
+/* Envelope area: centered */
+.landing__envelopes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Envelopes (Stack ↔ Grid)
+   ============================================
+
+   4 envelope elements positioned absolutely. JS drives
+   all major position/size animation via frameAnimation.ts
+   at 12fps. CSS only handles static styles and minor
+   hover/active effects with steps().
+   ============================================ */
+
+.envelopes {
+  position: relative;
+  width: 200px;
+  height: 160px;
+}
+
+.envelopes--distributed {
+  /* Expand to hold 2×2 grid: 2×150 + 32px gap */
+  width: 332px;
+  height: 242px;
+}
+
+/* --- Individual envelope --- */
+.envelope {
+  position: absolute;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  /* left/top/width/height set by JS */
+}
+
+.envelope[data-index="0"] { z-index: 1; }
+.envelope[data-index="1"] { z-index: 2; }
+.envelope[data-index="2"] { z-index: 3; }
+.envelope[data-index="3"] { z-index: 4; }
+
+/* Stacked state: only top envelope gets pointer events */
+.envelopes:not(.envelopes--distributed) .envelope[data-index="0"],
+.envelopes:not(.envelopes--distributed) .envelope[data-index="1"],
+.envelopes:not(.envelopes--distributed) .envelope[data-index="2"] {
+  pointer-events: none;
+}
+
+/* Stacked hover — top envelope only, instant snap */
+.envelopes:not(.envelopes--distributed) .envelope[data-index="3"]:hover .envelope__img {
+  transform: scale(1.06);
+}
+.envelopes:not(.envelopes--distributed) .envelope[data-index="3"]:active .envelope__img {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+/* --- Envelope image --- */
+.envelope__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* --- Back arrow --- */
+.envelopes__back {
+  position: absolute;
+  top: calc(-1 * var(--space-9) - 20px);
+  left: -8px;
+  cursor: pointer;
+  padding: var(--space-2);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  background: none;
+  border: none;
+}
+
+.envelopes__back .sticker-btn__img {
+  width: 64px;
+  height: 64px;
+}
+
+.envelopes--grid-active .envelopes__back {
+  animation: fadeIn 0.3s steps(4, end) both;
+  pointer-events: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.envelopes__back:hover {
+  transform: scale(1.06);
+}
+
+.envelopes__back:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+/* Distributed hover/active — no transition, instant snap */
+.envelopes--grid-active .envelope:hover .envelope__img {
+  transform: scale(1.06);
+}
+.envelopes--grid-active .envelope:active .envelope__img {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+@keyframes envelopePop {
+  0%   { transform: scale(1.06); }
+  33%  { transform: scale(0.95); }
+  66%  { transform: scale(1.1); }
+  100% { transform: scale(1.06); }
+}
+
+/* ============================================
+   Opened Envelope — 3-layer composite
+   Back (z:1) → Paper slip (z:2) → Front edge (z:3)
+   The paper slides up; the front edge covers its base.
+   Class names designed for easy image swap later.
+   ============================================ */
+
+.opened-envelope {
+  position: absolute;
+  z-index: 20;
+}
+
+/* Frame image — fills the opened envelope container */
+.opened-envelope__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Season background — only visible when expanding to fullscreen (frame img hidden by JS) */
+.opened-envelope--expanding {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.opened-envelope--expanding.opened-envelope--spring { background-image: url('/images/bg-spring.jpg'); }
+.opened-envelope--expanding.opened-envelope--summer { background-image: url('/images/bg-summer.jpg'); }
+.opened-envelope--expanding.opened-envelope--autumn { background-image: url('/images/bg-autumn.jpg'); }
+.opened-envelope--expanding.opened-envelope--winter { background-image: url('/images/bg-winter.jpg'); }
+
+/* Paper slip — overlaid on top of frame 5 image */
+.paper-slip {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: 40%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+/* ============================================
+   Image Button (btn-browse, btn-surprise, btn-empty)
+   ============================================ */
+
+.img-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.img-btn__bg {
+  display: block;
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.img-btn__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-primary);
+  pointer-events: none;
+  padding: 12px;
+}
+
+.img-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.1s steps(2, end);
+}
+
+.img-btn:active {
+  transform: scale(0.95);
+  transition: transform 0.08s steps(2, end);
+}
+
+/* --- Moving back button (Season Options) --- */
+.season-options__back {
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  z-index: 25;
+}
+
+.season-options__back:hover {
+  transform: scale(1.06);
+}
+
+.season-options__back:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+.season-options__back-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ============================================
+   Pen
+   ============================================ */
+
+.pen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.pen:hover {
+  transform: scale(1.06);
+}
+
+.pen:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+.pen__img {
+  width: 80px;
+  height: 200px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ============================================
+   Gramophone
+   ============================================ */
+
+.gramophone__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.gramophone__icon:hover {
+  transform: scale(1.06);
+}
+
+.gramophone__icon:active {
+  animation: envelopePop 0.15s steps(3, end) both;
+}
+
+.gramophone__img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ============================================
+   Spotify Bottom Bar
+   Compact player between gramophone (left) and pen (right).
+   ============================================ */
+
+.spotify-bar {
+  position: fixed;
+  bottom: calc(var(--space-7) + var(--safe-bottom));
+  /* Sit to the right of gramophone (100px icon + 28px pad + small gap) */
+  left: calc(var(--space-7) + 108px);
+  /* Leave room for pen on the right (same mirror calc) */
+  right: calc(var(--space-7) + 108px);
+  z-index: 9;
+  height: 88px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.spotify-bar__iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
