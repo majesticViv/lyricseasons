@@ -1,4 +1,5 @@
 import { animateMultipleElements, type MultiElementTarget } from '../animations/frameAnimation';
+import { vibrate } from '../lib/haptics';
 import type { Season } from '../types';
 
 const BASE_SEASONS: { key: Season; img: string }[] = [
@@ -104,7 +105,7 @@ export function renderEnvelopeStack(
       if (!isDistributed) {
         distribute();
       } else {
-        if (navigator.vibrate) navigator.vibrate(10);
+        vibrate();
         onSeasonTap(s.key, env, {
           wrapper,
           envelopeEls,
@@ -201,7 +202,7 @@ export function renderEnvelopeStack(
   function distribute() {
     if (isDistributed || isAnimating) return;
     isAnimating = true;
-    if (navigator.vibrate) navigator.vibrate(10);
+    vibrate();
 
     // Expand container first so grid positions are correct
     wrapper.classList.add('envelopes--distributed');

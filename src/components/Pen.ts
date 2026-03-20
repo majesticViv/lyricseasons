@@ -1,3 +1,5 @@
+import { vibrate } from '../lib/haptics';
+
 export function renderPen(
   container: HTMLElement,
   onTap: () => void
@@ -14,7 +16,7 @@ export function renderPen(
   btn.appendChild(img);
 
   btn.addEventListener('click', () => {
-    if (navigator.vibrate) navigator.vibrate(20);
+    vibrate(20);
     onTap();
   });
 

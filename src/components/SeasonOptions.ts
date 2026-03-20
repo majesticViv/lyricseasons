@@ -1,4 +1,5 @@
 import { animateFrames, lerp } from '../animations/frameAnimation';
+import { vibrate } from '../lib/haptics';
 import type { EnvelopeContext } from './EnvelopeStack';
 import type { Season } from '../types';
 
@@ -427,7 +428,7 @@ function makeImageBtn(src: string, label: string, onTap: () => void): HTMLButton
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (navigator.vibrate) navigator.vibrate(10);
+    vibrate();
     onTap();
   });
 

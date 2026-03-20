@@ -2,22 +2,8 @@ import { addEntry } from '../lib/db';
 import { validateEntry } from '../lib/validation';
 import { animateFrames, lerp } from '../animations/frameAnimation';
 import { store } from '../state/store';
+import { SEASONS, STAMP_IMAGES } from '../lib/seasons';
 import type { Season } from '../types';
-
-const SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
-
-const STAMP_IMAGES: Record<Season, string> = {
-  spring: '/images/stamp-spring.png',
-  summer: '/images/stamp-summer.png',
-  autumn: '/images/stamp-autumn.png',
-  winter: '/images/stamp-winter.png',
-};
-
-// Preload stamp images
-Object.values(STAMP_IMAGES).forEach(src => {
-  const img = new Image();
-  img.src = src;
-});
 
 interface AddViewCallbacks {
   onBack: () => void;
@@ -30,7 +16,6 @@ interface AddViewCallbacks {
  * The landing background and pen remain visible through the gap at top.
  */
 export function renderAddView(
-  _container: HTMLElement,
   callbacks: AddViewCallbacks
 ): void {
   let selectedSeason: Season = 'spring';

@@ -1,6 +1,5 @@
+import { SEASONS } from './seasons';
 import type { Season, Author } from '../types';
-
-const VALID_SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
 const VALID_AUTHORS: Author[] = ['Viv', 'Bili'];
 
 export interface ValidationError {
@@ -37,7 +36,7 @@ export function validateEntry(data: {
     errors.push({ field: 'artist', message: 'Artist must be under 200 characters' });
   }
 
-  if (!VALID_SEASONS.includes(data.season as Season)) {
+  if (!SEASONS.includes(data.season as Season)) {
     errors.push({ field: 'season', message: 'Please select a season' });
   }
 

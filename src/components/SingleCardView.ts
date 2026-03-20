@@ -1,6 +1,7 @@
 import { createLyricCard } from './LyricCard';
 import { createStickerButton } from './StickerButton';
 import { animateFrames } from '../animations/frameAnimation';
+import { vibrate } from '../lib/haptics';
 import type { Entry, Season } from '../types';
 
 interface SingleCardCallbacks {
@@ -65,7 +66,7 @@ export function renderSingleCardView(
   penImg.className = 'pen__img';
   penBtn.appendChild(penImg);
   penBtn.addEventListener('click', () => {
-    if (navigator.vibrate) navigator.vibrate(20);
+    vibrate(20);
     callbacks.onEdit(entry);
   });
   penArea.appendChild(penBtn);

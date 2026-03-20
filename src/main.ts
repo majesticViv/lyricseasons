@@ -17,15 +17,17 @@ import { renderEditView } from './components/EditView';
 import { getRandomEntry } from './lib/db';
 import type { EnvelopeContext } from './components/EnvelopeStack';
 import { closePlaylist } from './lib/spotify';
+import { preloadStamps } from './lib/seasons';
 import type { Season, Entry } from './types';
 
 const app = document.getElementById('app')!;
+preloadStamps();
 
 /** Remove any view overlays attached to document.body (browse, single-card, edit, empty-message) */
 function removeBodyOverlays(): void {
   closePlaylist();
   document.querySelectorAll(
-    'body > .browse-view, body > .single-card-view, body > .add-view, body > [style*="z-index"]'
+    'body > .browse-view, body > .single-card-view, body > .add-view, body > [data-overlay]'
   ).forEach(el => el.remove());
 }
 
@@ -115,7 +117,7 @@ function showSingleCard(entry: Entry, season: Season, from: 'browse' | 'distribu
 
 function showEdit(entry: Entry, season: Season, from: 'browse' | 'distributed'): void {
   // Don't remove overlays — EditView slides on top of the current view
-  renderEditView(app, entry, {
+  renderEditView(entry, {
     onBack() {
       showSingleCard(entry, season, from);
     },
@@ -127,7 +129,7 @@ function showEdit(entry: Entry, season: Season, from: 'browse' | 'distributed'):
 
 function showAdd(): void {
   // Add View overlays the landing — no need to re-render landing on dismiss
-  renderAddView(app, {
+  renderAddView({
     onBack() {
       // Paper slides down, landing is already visible underneath
     },
@@ -139,6 +141,7 @@ function showAdd(): void {
 
 function showEmptyMessage(_envelopeEl: HTMLElement, shrinkBack: () => void): void {
   const overlay = document.createElement('div');
+  overlay.dataset.overlay = '';
   overlay.style.position = 'fixed';
   overlay.style.inset = '0';
   overlay.style.zIndex = '30';

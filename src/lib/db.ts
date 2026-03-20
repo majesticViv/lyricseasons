@@ -23,10 +23,22 @@ export async function getEntriesBySeason(season: Season): Promise<Entry[]> {
 }
 
 export async function getRandomEntry(season: Season): Promise<Entry | null> {
-  const entries = await getEntriesBySeason(season);
-  if (entries.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * entries.length);
-  return entries[randomIndex];
+  const count = await getEntryCount(season);
+  if (count === 0) return null;
+
+  const offset = Math.floor(Math.random() * count);
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .eq('season', season)
+    .order('created_at', { ascending: false })
+    .range(offset, offset);
+
+  if (error) {
+    throw new DatabaseError(`Failed to fetch random entry: ${error.message}`, error.code);
+  }
+
+  return (data?.[0] as Entry) ?? null;
 }
 
 export async function getEntryCount(season: Season): Promise<number> {
@@ -42,7 +54,7 @@ export async function getEntryCount(season: Season): Promise<number> {
   return count ?? 0;
 }
 
-const CARDS_PER_PAGE = 2;
+export const CARDS_PER_PAGE = 2;
 
 export function getTotalPages(entryCount: number): number {
   return Math.ceil(entryCount / CARDS_PER_PAGE);

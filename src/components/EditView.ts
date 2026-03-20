@@ -2,16 +2,8 @@ import { updateEntry } from '../lib/db';
 import { validateEntry } from '../lib/validation';
 import { animateFrames, lerp } from '../animations/frameAnimation';
 import { store } from '../state/store';
+import { SEASONS, STAMP_IMAGES } from '../lib/seasons';
 import type { Entry, Season } from '../types';
-
-const SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
-
-const STAMP_IMAGES: Record<Season, string> = {
-  spring: '/images/stamp-spring.png',
-  summer: '/images/stamp-summer.png',
-  autumn: '/images/stamp-autumn.png',
-  winter: '/images/stamp-winter.png',
-};
 
 interface EditViewCallbacks {
   onBack: () => void;
@@ -24,7 +16,6 @@ interface EditViewCallbacks {
  * A transparent gap zone intercepts clicks above the paper.
  */
 export function renderEditView(
-  _container: HTMLElement,
   entry: Entry,
   callbacks: EditViewCallbacks
 ): void {

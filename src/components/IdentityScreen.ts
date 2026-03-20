@@ -1,5 +1,6 @@
 import { store } from '../state/store';
 import { animateFrames } from '../animations/frameAnimation';
+import { vibrate } from '../lib/haptics';
 import type { Author } from '../types';
 
 const SEAL_IMAGES: Record<Author, string> = {
@@ -43,7 +44,7 @@ export function renderIdentityScreen(
   polaroid.addEventListener('click', () => {
     if (revealed) return;
     revealed = true;
-    if (navigator.vibrate) navigator.vibrate(10);
+    vibrate();
     // Cross-fade: blank out, photo in — stop-motion discrete steps
     animateFrames({
       duration: 800,
@@ -98,7 +99,7 @@ function handleSelect(
     sibling.setAttribute('aria-disabled', 'true');
   }
 
-  if (navigator.vibrate) navigator.vibrate(10);
+  vibrate();
   store.setCurrentUser(name);
 
   setTimeout(() => onComplete(), 500);

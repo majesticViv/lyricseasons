@@ -1,10 +1,8 @@
-import { getEntriesBySeason } from '../lib/db';
+import { getEntryCount, getEntriesPage, getTotalPages, CARDS_PER_PAGE } from '../lib/db';
 import { createLyricCard } from './LyricCard';
 import { createStickerButton } from './StickerButton';
 import { animateFrames, lerp } from '../animations/frameAnimation';
 import type { Season, Entry } from '../types';
-
-const CARDS_PER_PAGE = 2;
 
 interface BrowseCallbacks {
   onCardTap: (entry: Entry) => void;
@@ -84,14 +82,13 @@ export async function renderBrowseView(
     contentLayer.style.opacity = '0';
   }
 
-  // Fetch entries
-  let allEntries: Entry[] = [];
+  // Fetch entry count, then load pages on demand
   let currentPage = 0;
   let totalPages = 0;
 
   try {
-    allEntries = await getEntriesBySeason(season);
-    totalPages = Math.ceil(allEntries.length / CARDS_PER_PAGE);
+    const count = await getEntryCount(season);
+    totalPages = getTotalPages(count);
   } catch {
     cardsArea.innerHTML = '<div class="browse-view__error">couldn\'t load entries — tap to retry</div>';
     cardsArea.addEventListener('click', () => renderBrowseView(container, season, callbacks, envelopeEl), { once: true });
@@ -99,7 +96,7 @@ export async function renderBrowseView(
     return;
   }
 
-  if (allEntries.length === 0) {
+  if (totalPages === 0) {
     cardsArea.innerHTML = '<div class="browse-view__empty"><img class="img-btn__bg" src="/images/btn-empty.png" alt="" /><span class="img-btn__label">empty~</span></div>';
     prevBtn.style.display = 'none';
     nextBtn.style.display = 'none';
@@ -107,7 +104,7 @@ export async function renderBrowseView(
     return;
   }
 
-  renderPage(currentPage, 'none');
+  await renderPage(currentPage, 'none');
 
   if (envelopeEl) {
     fadeInContent();
@@ -133,18 +130,13 @@ export async function renderBrowseView(
     });
   }
 
-  function getPageEntries(page: number): Entry[] {
-    const start = page * CARDS_PER_PAGE;
-    return allEntries.slice(start, start + CARDS_PER_PAGE);
-  }
-
   let sliding = false;
   const SLIDE_PX = 120; // how far cards slide offscreen
   const SLIDE_DURATION = 450;
 
-  function renderPage(page: number, direction: 'none' | 'next' | 'prev') {
+  async function renderPage(page: number, direction: 'none' | 'next' | 'prev') {
     currentPage = page;
-    const entries = getPageEntries(page);
+    const entries = await getEntriesPage(season, page);
 
     prevBtn.style.display = page > 0 ? '' : 'none';
     nextBtn.style.display = page < totalPages - 1 ? '' : 'none';
@@ -210,9 +202,10 @@ export async function renderBrowseView(
     });
   }
 
-  function goToPage(page: number) {
+  async function goToPage(page: number) {
     if (page < 0 || page >= totalPages || page === currentPage || sliding) return;
+    sliding = true; // Guard before async gap to prevent double-tap race
     const direction = page > currentPage ? 'next' : 'prev';
-    renderPage(page, direction);
+    await renderPage(page, direction);
   }
 }

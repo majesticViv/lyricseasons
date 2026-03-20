@@ -1,4 +1,5 @@
 import { togglePlaylist } from '../lib/spotify';
+import { vibrate } from '../lib/haptics';
 
 export function renderGramophone(container: HTMLElement): void {
   const btn = document.createElement('button');
@@ -13,7 +14,7 @@ export function renderGramophone(container: HTMLElement): void {
   btn.appendChild(img);
 
   btn.addEventListener('click', () => {
-    if (navigator.vibrate) navigator.vibrate(20);
+    vibrate(20);
     togglePlaylist();
   });
 

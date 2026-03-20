@@ -1,3 +1,5 @@
+import { vibrate } from '../lib/haptics';
+
 export type StickerType = 'back' | 'edit' | 'next-page' | 'prev-page';
 
 const IMAGES: Partial<Record<StickerType, string>> = {
@@ -41,7 +43,7 @@ export function createStickerButton(type: StickerType, onTap: () => void): HTMLB
   }
 
   btn.addEventListener('click', () => {
-    if (navigator.vibrate) navigator.vibrate(10);
+    vibrate();
     onTap();
   });
 
