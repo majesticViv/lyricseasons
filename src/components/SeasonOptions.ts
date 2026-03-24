@@ -7,6 +7,7 @@ import type { Season } from '../types';
 interface SeasonOptionsCallbacks {
   onBrowse: (envelopeEl: HTMLElement, shrinkBack: () => void) => void;
   onSurprise: (envelopeEl: HTMLElement, shrinkBack: () => void) => void;
+  onSearch: () => void;
 }
 
 // Focused envelope size (centered)
@@ -94,7 +95,9 @@ export function showSeasonOptions(
   movingSearch.style.pointerEvents = 'none';
   document.body.appendChild(movingSearch);
 
-  // TODO: wire up search functionality
+  movingSearch.addEventListener('click', () => {
+    callbacks.onSearch();
+  });
 
   const selectedIndex = Number(envelopeEl.dataset.index);
   const fromRect = getGridRect(selectedIndex);

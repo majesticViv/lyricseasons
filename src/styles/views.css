@@ -660,8 +660,8 @@
 /* Text input area — torn paper background with overlaid input */
 .search-view__input-area {
   position: relative;
-  width: 60vw;
-  max-width: 260px;
+  width: 45vw;
+  max-width: 200px;
   margin-top: calc(90px + var(--safe-top));
   flex-shrink: 0;
 }

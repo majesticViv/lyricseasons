@@ -49,6 +49,9 @@ function showLanding(): void {
   renderLanding(app, {
     onSeasonTap: (season: Season, envelopeEl: HTMLElement, ctx: EnvelopeContext) => {
       showSeasonOptions(envelopeEl, season, ctx, {
+        onSearch() {
+          showSearch();
+        },
         onBrowse(openedEnvelope: HTMLElement, shrinkBack: () => void) {
           // Envelope is fullscreen — render Browse on top, fade in cards
           renderBrowseView(app, season, {
