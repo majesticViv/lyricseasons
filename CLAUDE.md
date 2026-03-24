@@ -39,3 +39,7 @@ For Next.js production builds: always set `typescript: { ignoreBuildErrors: true
 
 ## API Development
 When creating new API routes or features, always verify: 1) All referenced DB columns exist in the schema, 2) UUID generation is imported and used for new records, 3) Cookie/auth paths match the app's routing structure.
+
+## Git
+- Never include "Co-authored-by" in commit messages
+- Use --reset-author flag when committing
