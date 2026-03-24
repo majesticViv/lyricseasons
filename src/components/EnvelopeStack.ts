@@ -68,8 +68,6 @@ export interface EnvelopeContext {
 export function renderEnvelopeStack(
   container: HTMLElement,
   onSeasonTap: (season: Season, envelopeEl: HTMLElement, ctx: EnvelopeContext) => void,
-  onDistribute: () => void,
-  onCollapse: () => void
 ): { collapse: () => void } {
   const stackOffsets = makeStackOffsets();
   const gridRotations = makeGridRotations();
@@ -146,8 +144,9 @@ export function renderEnvelopeStack(
   searchImg.draggable = false;
   searchImg.className = 'sticker-btn__img';
   searchBtn.appendChild(searchImg);
+  // TODO: wire up search functionality
   searchBtn.addEventListener('click', () => {
-    if (!isAnimating) console.log('search tapped');
+    if (!isAnimating) { /* search handler */ }
   });
   wrapper.appendChild(searchBtn);
 
@@ -243,8 +242,6 @@ export function renderEnvelopeStack(
         },
       });
 
-      // Fire pen animation at the same moment as envelopes
-      onDistribute();
     });
   }
 
@@ -260,9 +257,6 @@ export function renderEnvelopeStack(
       from: getGridRect(i),
       to:   getStackRect(i),
     }));
-
-    // Fire pen animation at the same moment as envelopes
-    onCollapse();
 
     animateMultipleElements(targets, {
       duration: 800,

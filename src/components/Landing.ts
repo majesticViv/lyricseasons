@@ -31,12 +31,7 @@ export function renderLanding(
   const envelopeArea = document.createElement('div');
   envelopeArea.className = 'landing__envelopes';
 
-  renderEnvelopeStack(
-    envelopeArea,
-    callbacks.onSeasonTap,
-    () => { /* envelopes distributed */ },
-    () => { /* envelopes collapsed */ }
-  );
+  renderEnvelopeStack(envelopeArea, callbacks.onSeasonTap);
   screen.appendChild(envelopeArea);
 
   container.appendChild(screen);

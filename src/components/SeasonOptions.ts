@@ -29,7 +29,7 @@ const OPEN_FRAMES = [
 const FRAME_DELAY = 80; // ms between frames
 
 // Season-specific closed envelope (used as frame 1)
-const CLOSED_IMAGES: Record<string, string> = {
+const CLOSED_IMAGES: Record<Season, string> = {
   spring: '/images/envelope-spring-closed.png',
   summer: '/images/envelope-summer-closed.png',
   autumn: '/images/envelope-autumn-closed.png',
@@ -100,9 +100,8 @@ export function showSeasonOptions(
   movingSearch.style.pointerEvents = 'none';
   document.body.appendChild(movingSearch);
 
-  movingSearch.addEventListener('click', () => {
-    console.log('search tapped');
-  });
+  // TODO: wire up search functionality
+  movingSearch.addEventListener('click', () => {});
 
   const selectedIndex = Number(envelopeEl.dataset.index);
   const fromRect = getGridRect(selectedIndex);
@@ -404,6 +403,7 @@ export function showSeasonOptions(
   }
 
   // Return envelope from center back to grid, fade others in
+  // (movingBack/movingSearch were already removed in expandEnvelope)
   function returnToGrid() {
     const toRect = getGridRect(selectedIndex);
     const toRotation = toRect.rotate ?? 0;

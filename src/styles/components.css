@@ -209,11 +209,11 @@ body {
   pointer-events: none;
 }
 
-/* --- Back arrow --- */
-.envelopes__back {
+/* --- Back & Search sticker buttons --- */
+.envelopes__back,
+.envelopes__search {
   position: absolute;
   top: calc(-1 * var(--space-9) - 20px);
-  left: -8px;
   cursor: pointer;
   padding: var(--space-2);
   z-index: 10;
@@ -222,13 +222,17 @@ body {
   background: none;
   border: none;
 }
+.envelopes__back  { left: -8px; }
+.envelopes__search { right: -8px; }
 
-.envelopes__back .sticker-btn__img {
+.envelopes__back .sticker-btn__img,
+.envelopes__search .sticker-btn__img {
   width: 64px;
   height: 64px;
 }
 
-.envelopes--grid-active .envelopes__back {
+.envelopes--grid-active .envelopes__back,
+.envelopes--grid-active .envelopes__search {
   animation: fadeIn 0.3s steps(4, end) both;
   pointer-events: auto;
 }
@@ -238,42 +242,12 @@ body {
   to   { opacity: 1; }
 }
 
-.envelopes__back:hover {
-  transform: scale(1.06);
-}
-
-.envelopes__back:active {
-  animation: envelopePop 0.15s steps(3, end) both;
-}
-
-/* --- Search button (mirrors back, top-right) --- */
-.envelopes__search {
-  position: absolute;
-  top: calc(-1 * var(--space-9) - 20px);
-  right: -8px;
-  cursor: pointer;
-  padding: var(--space-2);
-  z-index: 10;
-  opacity: 0;
-  pointer-events: none;
-  background: none;
-  border: none;
-}
-
-.envelopes__search .sticker-btn__img {
-  width: 64px;
-  height: 64px;
-}
-
-.envelopes--grid-active .envelopes__search {
-  animation: fadeIn 0.3s steps(4, end) both;
-  pointer-events: auto;
-}
-
+.envelopes__back:hover,
 .envelopes__search:hover {
   transform: scale(1.06);
 }
 
+.envelopes__back:active,
 .envelopes__search:active {
   animation: envelopePop 0.15s steps(3, end) both;
 }
@@ -390,49 +364,28 @@ body {
   transition: transform 0.08s steps(2, end);
 }
 
-/* --- Moving back button (Season Options) --- */
-.season-options__back {
-  position: absolute;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: var(--space-2);
-  z-index: 25;
-}
-
-.season-options__back:hover {
-  transform: scale(1.06);
-}
-
-.season-options__back:active {
-  animation: envelopePop 0.15s steps(3, end) both;
-}
-
-.season-options__back-img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-/* --- Moving search button (Season Options) — fixed to viewport --- */
+/* --- Moving buttons (Season Options) --- */
+.season-options__back,
 .season-options__search {
-  position: fixed;
   background: none;
   border: none;
   cursor: pointer;
   padding: var(--space-2);
-  z-index: 1000;
 }
+.season-options__back  { position: absolute; z-index: 25; }
+.season-options__search { position: fixed; z-index: 1000; }
 
+.season-options__back:hover,
 .season-options__search:hover {
   transform: scale(1.06);
 }
 
+.season-options__back:active,
 .season-options__search:active {
   animation: envelopePop 0.15s steps(3, end) both;
 }
 
+.season-options__back-img,
 .season-options__search-img {
   width: 64px;
   height: 64px;
