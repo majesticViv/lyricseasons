@@ -22,14 +22,14 @@ export function renderEditView(
   let selectedSeason: Season = entry.season;
   let saving = false;
 
-  // Hide ALL existing back buttons in the DOM so only one is visible
-  const hiddenBackBtns: HTMLElement[] = [];
+  // Hide ALL existing buttons in the DOM so only ours are visible
+  const hiddenBtns: HTMLElement[] = [];
   document.querySelectorAll<HTMLElement>(
-    '.browse-view__back, .single-card-view__back, .envelopes__back, .season-options__back'
+    '.browse-view__back, .single-card-view__back, .envelopes__back, .season-options__back, .envelopes__search, .season-options__search'
   ).forEach(btn => {
     if (btn.style.visibility !== 'hidden') {
       btn.style.visibility = 'hidden';
-      hiddenBackBtns.push(btn);
+      hiddenBtns.push(btn);
     }
   });
 
@@ -189,7 +189,7 @@ export function renderEditView(
 
   function slideDown(onDone: () => void) {
     // Restore any back buttons we hid
-    hiddenBackBtns.forEach(btn => {
+    hiddenBtns.forEach(btn => {
       btn.style.visibility = '';
     });
 

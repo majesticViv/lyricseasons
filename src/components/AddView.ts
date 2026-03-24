@@ -21,14 +21,14 @@ export function renderAddView(
   let selectedSeason: Season = 'spring';
   let saving = false;
 
-  // Hide any existing back buttons so they don't overlap ours
-  const hiddenBackBtns: HTMLElement[] = [];
+  // Hide any existing buttons so they don't overlap ours
+  const hiddenBtns: HTMLElement[] = [];
   document.querySelectorAll<HTMLElement>(
-    '.browse-view__back, .single-card-view__back, .envelopes__back, .season-options__back'
+    '.browse-view__back, .single-card-view__back, .envelopes__back, .season-options__back, .envelopes__search, .season-options__search'
   ).forEach(btn => {
     if (btn.style.visibility !== 'hidden') {
       btn.style.visibility = 'hidden';
-      hiddenBackBtns.push(btn);
+      hiddenBtns.push(btn);
     }
   });
 
@@ -189,7 +189,7 @@ export function renderAddView(
   // --- Slide down (dismiss) ---
   function slideDown(onDone: () => void) {
     // Restore hidden back buttons
-    hiddenBackBtns.forEach(btn => {
+    hiddenBtns.forEach(btn => {
       btn.style.visibility = '';
     });
 
