@@ -210,7 +210,7 @@ export function renderSearchView(callbacks: SearchCallbacks): void {
   function populateCards(entries: Entry[]) {
     resultsArea.innerHTML = '';
     entries.forEach((entry, i) => {
-      const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+      const orientation = i % 2 === 0 ? 'horizontal' : 'vertical';
       const card = createLyricCard(entry, { mode: 'browse', orientation });
       card.classList.add('search-view__card');
       card.style.transform = `rotate(${randRotation(1, 3)}deg)`;

@@ -187,8 +187,7 @@ export async function renderBrowseView(
   function populateCards(entries: Entry[]) {
     cardsArea.innerHTML = '';
     entries.forEach((entry, i) => {
-      const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-
+      const orientation = i % 2 === 0 ? 'horizontal' : 'vertical';
       const card = createLyricCard(entry, { mode: 'browse', orientation });
       card.classList.add('browse-view__card');
       const rot = randRotation(1, 3);
