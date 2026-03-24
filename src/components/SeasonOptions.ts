@@ -98,7 +98,17 @@ export function showSeasonOptions(
   movingSearch.style.left = searchStartLeft + 'px';
   movingSearch.style.top = searchStartTop + 'px';
   movingSearch.style.pointerEvents = 'none';
+  movingSearch.style.opacity = '1';
+  movingSearch.style.visibility = 'visible';
+  movingSearch.style.zIndex = '50';
+  movingSearch.style.outline = '3px solid red';
   wrapper.appendChild(movingSearch);
+  console.log('[search-debug] created movingSearch', {
+    searchStartLeft, searchStartTop,
+    offsetWidth: searchBtn.offsetWidth,
+    offsetHeight: searchBtn.offsetHeight,
+    parentNode: movingSearch.parentNode?.nodeName,
+  });
 
   movingSearch.addEventListener('click', () => {
     console.log('search tapped');
@@ -126,6 +136,13 @@ export function showSeasonOptions(
   // Search → top-right (mirror of back)
   const searchTargetLeft = -wrapperRect.left + window.innerWidth - PAD - searchBtn.offsetWidth;
   const searchTargetTop = -wrapperRect.top + PAD;
+  console.log('[search-debug] targets', {
+    searchTargetLeft, searchTargetTop,
+    backTargetLeft, backTargetTop,
+    wrapperRect: { left: wrapperRect.left, top: wrapperRect.top, width: wrapperRect.width, height: wrapperRect.height },
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+  });
 
   // --- Step 1: Animate envelope to center + move back button simultaneously ---
   animateFrames({
