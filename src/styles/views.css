@@ -660,9 +660,10 @@
 /* Text input area — torn paper background with overlaid input */
 .search-view__input-area {
   position: relative;
-  width: 85vw;
-  max-width: 360px;
-  margin-top: calc(100px + var(--safe-top));
+  width: 60vw;
+  max-width: 260px;
+  margin-top: calc(90px + var(--safe-top));
+  flex-shrink: 0;
 }
 
 .search-view__input-bg {
@@ -681,7 +682,7 @@
   border: none;
   outline: none;
   font-family: var(--font-handwriting);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--color-text);
   padding: 12% 10%;
   text-align: center;
@@ -691,7 +692,7 @@
   color: var(--color-text-muted);
 }
 
-/* Results — same layout as browse cards */
+/* Results — below input, no overlap */
 .search-view__results {
   position: relative;
   width: 100%;
@@ -699,9 +700,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: var(--space-5);
   padding-bottom: calc(80px + var(--safe-bottom));
   gap: 24px;
+  overflow-y: auto;
 }
 
 .search-view__card {
