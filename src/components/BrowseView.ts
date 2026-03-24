@@ -1,4 +1,4 @@
-import { getEntryCount, getEntriesPage, getTotalPages, CARDS_PER_PAGE } from '../lib/db';
+import { getEntryCount, getEntriesPage, getTotalPages } from '../lib/db';
 import { createLyricCard } from './LyricCard';
 import { createStickerButton } from './StickerButton';
 import { animateFrames, lerp } from '../animations/frameAnimation';
@@ -142,7 +142,7 @@ export async function renderBrowseView(
     nextBtn.style.display = page < totalPages - 1 ? '' : 'none';
 
     if (direction === 'none') {
-      populateCards(entries, page);
+      populateCards(entries);
       return;
     }
 
@@ -162,7 +162,7 @@ export async function renderBrowseView(
       },
       onComplete() {
         // Swap content, position at enter side
-        populateCards(entries, page);
+        populateCards(entries);
         cardsArea.style.transform = `translateX(${enterX}px)`;
         cardsArea.style.opacity = '0';
 
@@ -184,13 +184,10 @@ export async function renderBrowseView(
     });
   }
 
-  function populateCards(entries: Entry[], page: number) {
+  function populateCards(entries: Entry[]) {
     cardsArea.innerHTML = '';
-    const baseIndex = page * CARDS_PER_PAGE;
-
     entries.forEach((entry, i) => {
-      const globalIndex = baseIndex + i;
-      const orientation = globalIndex % 2 === 0 ? 'horizontal' : 'vertical';
+      const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
 
       const card = createLyricCard(entry, { mode: 'browse', orientation });
       card.classList.add('browse-view__card');

@@ -168,7 +168,7 @@ export function renderSearchView(callbacks: SearchCallbacks): void {
     nextBtn.style.display = page < totalPages - 1 ? '' : 'none';
 
     if (direction === 'none') {
-      populateCards(entries, page);
+      populateCards(entries);
       return;
     }
 
@@ -186,7 +186,7 @@ export function renderSearchView(callbacks: SearchCallbacks): void {
         resultsArea.style.transform = `translateX(${lerp(0, exitX, p)}px)`;
       },
       onComplete() {
-        populateCards(entries, page);
+        populateCards(entries);
         resultsArea.style.transform = `translateX(${enterX}px)`;
         resultsArea.style.opacity = '0';
 
@@ -207,13 +207,10 @@ export function renderSearchView(callbacks: SearchCallbacks): void {
     });
   }
 
-  function populateCards(entries: Entry[], page: number) {
+  function populateCards(entries: Entry[]) {
     resultsArea.innerHTML = '';
-    const baseIndex = page * CARDS_PER_PAGE;
-
     entries.forEach((entry, i) => {
-      const globalIndex = baseIndex + i;
-      const orientation = globalIndex % 2 === 0 ? 'horizontal' : 'vertical';
+      const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
       const card = createLyricCard(entry, { mode: 'browse', orientation });
       card.classList.add('search-view__card');
       card.style.transform = `rotate(${randRotation(1, 3)}deg)`;

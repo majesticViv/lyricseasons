@@ -81,7 +81,7 @@ export function renderSingleCardView(
   if (isEnvelope || isOverlay) {
     view.style.position = 'fixed';
     view.style.inset = '0';
-    view.style.zIndex = isOverlay ? '35' : '30';
+    view.style.zIndex = isOverlay ? '45' : '30';
     view.style.background = isOverlay ? '' : 'transparent';
     contentLayer.style.opacity = '0';
     document.body.appendChild(view);
