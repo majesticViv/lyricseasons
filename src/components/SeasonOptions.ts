@@ -48,7 +48,7 @@ export function showSeasonOptions(
   ctx: EnvelopeContext,
   callbacks: SeasonOptionsCallbacks
 ): void {
-  const { wrapper, envelopeEls, backBtn, getGridRect, setAnimating } = ctx;
+  const { wrapper, envelopeEls, backBtn, searchBtn, getGridRect, setAnimating } = ctx;
 
   if (wrapper.querySelector('.opened-envelope')) return;
   setAnimating(true);
@@ -79,6 +79,31 @@ export function showSeasonOptions(
     if (movingBackClickHandler) movingBackClickHandler();
   });
 
+  // --- Search button: capture grid position, then hide the grid one ---
+  const searchStartLeft = searchBtn.offsetLeft;
+  const searchStartTop = searchBtn.offsetTop;
+  searchBtn.style.visibility = 'hidden';
+  searchBtn.style.pointerEvents = 'none';
+
+  // Create a moving search button at the grid search button's position
+  const movingSearch = document.createElement('button');
+  movingSearch.className = 'season-options__search';
+  movingSearch.setAttribute('aria-label', 'Search');
+  const movingSearchImg = document.createElement('img');
+  movingSearchImg.src = '/images/sticker-search.png';
+  movingSearchImg.alt = '';
+  movingSearchImg.draggable = false;
+  movingSearchImg.className = 'season-options__search-img';
+  movingSearch.appendChild(movingSearchImg);
+  movingSearch.style.left = searchStartLeft + 'px';
+  movingSearch.style.top = searchStartTop + 'px';
+  movingSearch.style.pointerEvents = 'none';
+  wrapper.appendChild(movingSearch);
+
+  movingSearch.addEventListener('click', () => {
+    console.log('search tapped');
+  });
+
   const selectedIndex = Number(envelopeEl.dataset.index);
   const fromRect = getGridRect(selectedIndex);
   const fromRotation = fromRect.rotate ?? 0;
@@ -92,12 +117,15 @@ export function showSeasonOptions(
   envelopeEl.style.zIndex = '20';
   const others = envelopeEls.filter((_, i) => i !== selectedIndex);
 
-  // Compute where the back button should end up: top-left corner with padding
-  // Horizontally aligned with gramophone (var(--space-7) = 28px from left edge of wrapper)
+  // Compute where buttons should end up: corners with padding
   const wrapperRect = wrapper.getBoundingClientRect();
   const PAD = 28; // matches gramophone's --space-7
+  // Back → top-left
   const backTargetLeft = -wrapperRect.left + PAD;
   const backTargetTop = -wrapperRect.top + PAD;
+  // Search → top-right (mirror of back)
+  const searchTargetLeft = -wrapperRect.left + window.innerWidth - PAD - searchBtn.offsetWidth;
+  const searchTargetTop = -wrapperRect.top + PAD;
 
   // --- Step 1: Animate envelope to center + move back button simultaneously ---
   animateFrames({
@@ -111,9 +139,12 @@ export function showSeasonOptions(
       envelopeEl.style.transform = `rotate(${lerp(fromRotation, 0, p)}deg)`;
       for (const el of others) el.style.opacity = String(1 - p);
 
-      // Move back button
+      // Move back button to top-left
       movingBack.style.left = lerp(backStartLeft, backTargetLeft, p) + 'px';
       movingBack.style.top  = lerp(backStartTop,  backTargetTop,  p) + 'px';
+      // Move search button to top-right
+      movingSearch.style.left = lerp(searchStartLeft, searchTargetLeft, p) + 'px';
+      movingSearch.style.top  = lerp(searchStartTop,  searchTargetTop,  p) + 'px';
     },
     onComplete() {
       envelopeEl.style.transform = 'rotate(0deg)';
@@ -165,9 +196,10 @@ export function showSeasonOptions(
     paperSlip.style.opacity = '0';
     openedEl.appendChild(paperSlip);
 
-    // Enable the moving back button as the close button
+    // Enable buttons
     movingBackClickHandler = closeEnvelope;
     movingBack.style.pointerEvents = 'auto';
+    movingSearch.style.pointerEvents = 'auto';
 
     animateFrames({
       duration: 250,
@@ -185,18 +217,21 @@ export function showSeasonOptions(
   function expandEnvelope(mode: 'browse' | 'surprise') {
     setAnimating(true);
     movingBack.style.pointerEvents = 'none';
+    movingSearch.style.pointerEvents = 'none';
 
-    // Fade out paper slip and back button together
+    // Fade out paper slip, back button, and search button together
     animateFrames({
       duration: 250,
       fps: 12,
       onFrame(p) {
         paperSlip.style.opacity = String(1 - p);
         movingBack.style.opacity = String(1 - p);
+        movingSearch.style.opacity = String(1 - p);
       },
       onComplete() {
         paperSlip.remove();
         movingBack.remove();
+        movingSearch.remove();
         playCloseFrames(() => {
           openedEl.classList.add('opened-envelope--expanding');
           frameImg.style.display = 'none';
@@ -210,6 +245,7 @@ export function showSeasonOptions(
   function closeEnvelope() {
     setAnimating(true);
     movingBack.style.pointerEvents = 'none';
+    movingSearch.style.pointerEvents = 'none';
 
     // Fade out paper slip
     animateFrames({
@@ -248,10 +284,14 @@ export function showSeasonOptions(
         // Move back button back to grid position
         movingBack.style.left = lerp(backTargetLeft, backStartLeft, p) + 'px';
         movingBack.style.top  = lerp(backTargetTop,  backStartTop,  p) + 'px';
+        // Move search button back to grid position
+        movingSearch.style.left = lerp(searchTargetLeft, searchStartLeft, p) + 'px';
+        movingSearch.style.top  = lerp(searchTargetTop,  searchStartTop,  p) + 'px';
       },
       onComplete() {
-        // Remove moving back, restore grid back button
+        // Remove moving buttons, restore grid buttons
         movingBack.remove();
+        movingSearch.remove();
         envelopeEl.style.zIndex = '';
         for (const el of others) {
           el.style.opacity = '';
@@ -259,6 +299,8 @@ export function showSeasonOptions(
         }
         backBtn.style.visibility = '';
         backBtn.style.pointerEvents = '';
+        searchBtn.style.visibility = '';
+        searchBtn.style.pointerEvents = '';
         setAnimating(false);
       },
     });
@@ -382,6 +424,8 @@ export function showSeasonOptions(
         }
         backBtn.style.visibility = '';
         backBtn.style.pointerEvents = '';
+        searchBtn.style.visibility = '';
+        searchBtn.style.pointerEvents = '';
         setAnimating(false);
       },
     });

@@ -403,9 +403,9 @@
 }
 
 .single-card-view__pen {
-  position: absolute;
-  bottom: calc(var(--space-7) + var(--safe-bottom));
-  right: var(--space-7);
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
 }
 
 /* Single card — fills most of screen width */

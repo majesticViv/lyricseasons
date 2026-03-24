@@ -60,6 +60,7 @@ export interface EnvelopeContext {
   wrapper: HTMLElement;
   envelopeEls: HTMLElement[];
   backBtn: HTMLElement;
+  searchBtn: HTMLElement;
   getGridRect: (index: number) => { left: number; top: number; width: number; height: number; rotate: number };
   setAnimating: (v: boolean) => void;
 }
@@ -110,6 +111,7 @@ export function renderEnvelopeStack(
           wrapper,
           envelopeEls,
           backBtn,
+          searchBtn,
           getGridRect,
           setAnimating(v: boolean) { isAnimating = v; },
         });
@@ -133,6 +135,21 @@ export function renderEnvelopeStack(
     if (!isAnimating) collapse();
   });
   wrapper.appendChild(backBtn);
+
+  // Search button (mirrors back button, top-right)
+  const searchBtn = document.createElement('button');
+  searchBtn.className = 'envelopes__search';
+  searchBtn.setAttribute('aria-label', 'Search');
+  const searchImg = document.createElement('img');
+  searchImg.src = '/images/sticker-search.png';
+  searchImg.alt = '';
+  searchImg.draggable = false;
+  searchImg.className = 'sticker-btn__img';
+  searchBtn.appendChild(searchImg);
+  searchBtn.addEventListener('click', () => {
+    if (!isAnimating) console.log('search tapped');
+  });
+  wrapper.appendChild(searchBtn);
 
   container.appendChild(wrapper);
 
