@@ -1,5 +1,6 @@
 import { animateFrames, lerp } from '../animations/frameAnimation';
 import { vibrate } from '../lib/haptics';
+import { CLOSED_ENVELOPE_IMAGES } from '../lib/seasons';
 import type { EnvelopeContext } from './EnvelopeStack';
 import type { Season } from '../types';
 
@@ -28,13 +29,6 @@ const OPEN_FRAMES = [
 ];
 const FRAME_DELAY = 80; // ms between frames
 
-// Season-specific closed envelope (used as frame 1)
-const CLOSED_IMAGES: Record<Season, string> = {
-  spring: '/images/envelope-spring-closed.png',
-  summer: '/images/envelope-summer-closed.png',
-  autumn: '/images/envelope-autumn-closed.png',
-  winter: '/images/envelope-winter-closed.png',
-};
 
 // Preload shared frames so swaps are instant
 OPEN_FRAMES.forEach(src => {
@@ -101,7 +95,6 @@ export function showSeasonOptions(
   document.body.appendChild(movingSearch);
 
   // TODO: wire up search functionality
-  movingSearch.addEventListener('click', () => {});
 
   const selectedIndex = Number(envelopeEl.dataset.index);
   const fromRect = getGridRect(selectedIndex);
@@ -155,7 +148,7 @@ export function showSeasonOptions(
   });
 
   // --- Step 2: Play stop-motion open frames, then show options ---
-  const allFrames = [CLOSED_IMAGES[season], ...OPEN_FRAMES];
+  const allFrames = [CLOSED_ENVELOPE_IMAGES[season], ...OPEN_FRAMES];
 
   let openedEl: HTMLElement;
   let frameImg: HTMLImageElement;
@@ -267,8 +260,8 @@ export function showSeasonOptions(
     });
   }
 
-  // Animate back button back to grid position while envelope returns
-  function animateBackToGrid() {
+  // Shared: animate envelope from center back to grid and restore state
+  function animateToGrid(extraOnFrame?: (p: number) => void, extraOnComplete?: () => void) {
     const toRect = getGridRect(selectedIndex);
     const toRotation = toRect.rotate ?? 0;
     animateFrames({
@@ -281,18 +274,10 @@ export function showSeasonOptions(
         envelopeEl.style.height    = lerp(centerRect.height, toRect.height, p) + 'px';
         envelopeEl.style.transform = `rotate(${lerp(0, toRotation, p)}deg)`;
         for (const el of others) el.style.opacity = String(p);
-
-        // Move back button back to grid position
-        movingBack.style.left = lerp(backTargetLeft, backStartLeft, p) + 'px';
-        movingBack.style.top  = lerp(backTargetTop,  backStartTop,  p) + 'px';
-        // Move search button back to grid position (viewport coords)
-        movingSearch.style.left = lerp(searchTargetVP.left, searchStartVP.left, p) + 'px';
-        movingSearch.style.top  = lerp(searchTargetVP.top,  searchStartVP.top,  p) + 'px';
+        extraOnFrame?.(p);
       },
       onComplete() {
-        // Remove moving buttons, restore grid buttons
-        movingBack.remove();
-        movingSearch.remove();
+        extraOnComplete?.();
         envelopeEl.style.zIndex = '';
         for (const el of others) {
           el.style.opacity = '';
@@ -305,6 +290,21 @@ export function showSeasonOptions(
         setAnimating(false);
       },
     });
+  }
+
+  function animateBackToGrid() {
+    animateToGrid(
+      (p) => {
+        movingBack.style.left = lerp(backTargetLeft, backStartLeft, p) + 'px';
+        movingBack.style.top  = lerp(backTargetTop,  backStartTop,  p) + 'px';
+        movingSearch.style.left = lerp(searchTargetVP.left, searchStartVP.left, p) + 'px';
+        movingSearch.style.top  = lerp(searchTargetVP.top,  searchStartVP.top,  p) + 'px';
+      },
+      () => {
+        movingBack.remove();
+        movingSearch.remove();
+      },
+    );
   }
 
   // Resize the opened envelope for frames that need a size bump
@@ -332,18 +332,14 @@ export function showSeasonOptions(
     }, FRAME_DELAY);
   }
 
+  function getFullscreenRect() {
+    const r = wrapper.getBoundingClientRect();
+    return { left: -r.left, top: -r.top, width: window.innerWidth, height: window.innerHeight };
+  }
+
   // --- Enlarge envelope to fill viewport ---
   function enlargeToFullscreen(mode: 'browse' | 'surprise') {
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
-
-    const fullRect = {
-      left: -wrapperRect.left,
-      top: -wrapperRect.top,
-      width: screenW,
-      height: screenH,
-    };
+    const fullRect = getFullscreenRect();
 
     const startRect = {
       left: parseFloat(openedEl.style.left),
@@ -372,17 +368,7 @@ export function showSeasonOptions(
   // --- Reverse: shrink envelope back to grid ---
   function shrinkBackToGrid() {
     setAnimating(true);
-
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
-
-    const fullRect = {
-      left: -wrapperRect.left,
-      top: -wrapperRect.top,
-      width: screenW,
-      height: screenH,
-    };
+    const fullRect = getFullscreenRect();
 
     animateFrames({
       duration: 600,
@@ -402,35 +388,9 @@ export function showSeasonOptions(
     });
   }
 
-  // Return envelope from center back to grid, fade others in
-  // (movingBack/movingSearch were already removed in expandEnvelope)
+  // movingBack/movingSearch were already removed in expandEnvelope
   function returnToGrid() {
-    const toRect = getGridRect(selectedIndex);
-    const toRotation = toRect.rotate ?? 0;
-    animateFrames({
-      duration: 600,
-      fps: 12,
-      onFrame(p) {
-        envelopeEl.style.left      = lerp(centerRect.left,   toRect.left,   p) + 'px';
-        envelopeEl.style.top       = lerp(centerRect.top,    toRect.top,    p) + 'px';
-        envelopeEl.style.width     = lerp(centerRect.width,  toRect.width,  p) + 'px';
-        envelopeEl.style.height    = lerp(centerRect.height, toRect.height, p) + 'px';
-        envelopeEl.style.transform = `rotate(${lerp(0, toRotation, p)}deg)`;
-        for (const el of others) el.style.opacity = String(p);
-      },
-      onComplete() {
-        envelopeEl.style.zIndex = '';
-        for (const el of others) {
-          el.style.opacity = '';
-          el.style.pointerEvents = '';
-        }
-        backBtn.style.visibility = '';
-        backBtn.style.pointerEvents = '';
-        searchBtn.style.visibility = '';
-        searchBtn.style.pointerEvents = '';
-        setAnimating(false);
-      },
-    });
+    animateToGrid();
   }
 }
 

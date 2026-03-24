@@ -1,13 +1,10 @@
 import { animateMultipleElements, type MultiElementTarget } from '../animations/frameAnimation';
 import { vibrate } from '../lib/haptics';
+import { SEASONS, CLOSED_ENVELOPE_IMAGES } from '../lib/seasons';
 import type { Season } from '../types';
 
-const BASE_SEASONS: { key: Season; img: string }[] = [
-  { key: 'spring', img: '/images/envelope-spring-closed.png' },
-  { key: 'summer', img: '/images/envelope-summer-closed.png' },
-  { key: 'autumn', img: '/images/envelope-autumn-closed.png' },
-  { key: 'winter', img: '/images/envelope-winter-closed.png' },
-];
+const BASE_SEASONS: { key: Season; img: string }[] =
+  SEASONS.map(key => ({ key, img: CLOSED_ENVELOPE_IMAGES[key] }));
 
 // Shuffle so a different envelope is on top each time
 function shuffle<T>(arr: T[]): T[] {
@@ -145,9 +142,6 @@ export function renderEnvelopeStack(
   searchImg.className = 'sticker-btn__img';
   searchBtn.appendChild(searchImg);
   // TODO: wire up search functionality
-  searchBtn.addEventListener('click', () => {
-    if (!isAnimating) { /* search handler */ }
-  });
   wrapper.appendChild(searchBtn);
 
   container.appendChild(wrapper);
