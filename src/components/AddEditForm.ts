@@ -5,7 +5,7 @@ import { SEASONS, STAMP_IMAGES } from '../lib/seasons';
 import type { Season } from '../types';
 
 const HIDDEN_BTN_SELECTOR =
-  '.browse-view__back, .single-card-view__back, .envelopes__back, .season-options__back, .envelopes__search, .season-options__search';
+  '.browse-view__back, .single-card-view__back, .envelopes__back, .season-options__back, .envelopes__search, .season-options__search, .search-view__back, .search-view__search-btn';
 
 interface FormOptions {
   initialSeason: Season;

@@ -65,6 +65,7 @@ export interface EnvelopeContext {
 export function renderEnvelopeStack(
   container: HTMLElement,
   onSeasonTap: (season: Season, envelopeEl: HTMLElement, ctx: EnvelopeContext) => void,
+  onSearchTap: () => void,
 ): { collapse: () => void } {
   const stackOffsets = makeStackOffsets();
   const gridRotations = makeGridRotations();
@@ -141,7 +142,9 @@ export function renderEnvelopeStack(
   searchImg.draggable = false;
   searchImg.className = 'sticker-btn__img';
   searchBtn.appendChild(searchImg);
-  // TODO: wire up search functionality
+  searchBtn.addEventListener('click', () => {
+    if (!isAnimating && isDistributed) onSearchTap();
+  });
   wrapper.appendChild(searchBtn);
 
   container.appendChild(wrapper);

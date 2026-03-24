@@ -92,6 +92,21 @@ export async function addEntry(entry: NewEntry): Promise<Entry> {
   return data as Entry;
 }
 
+export async function searchEntries(query: string): Promise<Entry[]> {
+  const pattern = `%${query}%`;
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .or(`lyric.ilike.${pattern},song_title.ilike.${pattern},artist.ilike.${pattern}`)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw new DatabaseError(`Failed to search entries: ${error.message}`, error.code);
+  }
+
+  return data as Entry[];
+}
+
 export async function updateEntry(id: string, updates: UpdateEntry): Promise<Entry> {
   const { data, error } = await supabase
     .from('entries')

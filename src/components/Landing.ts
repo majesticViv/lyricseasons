@@ -8,6 +8,7 @@ export function renderLanding(
   callbacks: {
     onSeasonTap: (season: Season, envelopeEl: HTMLElement, ctx: EnvelopeContext) => void;
     onPenTap: () => void;
+    onSearchTap: () => void;
   }
 ): void {
   container.innerHTML = '';
@@ -31,7 +32,7 @@ export function renderLanding(
   const envelopeArea = document.createElement('div');
   envelopeArea.className = 'landing__envelopes';
 
-  renderEnvelopeStack(envelopeArea, callbacks.onSeasonTap);
+  renderEnvelopeStack(envelopeArea, callbacks.onSeasonTap, callbacks.onSearchTap);
   screen.appendChild(envelopeArea);
 
   container.appendChild(screen);

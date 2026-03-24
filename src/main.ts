@@ -14,6 +14,7 @@ import { renderBrowseView } from './components/BrowseView';
 import { renderSingleCardView } from './components/SingleCardView';
 import { renderAddView } from './components/AddView';
 import { renderEditView } from './components/EditView';
+import { renderSearchView } from './components/SearchView';
 import { getRandomEntry } from './lib/db';
 import type { EnvelopeContext } from './components/EnvelopeStack';
 import { closePlaylist } from './lib/spotify';
@@ -27,7 +28,7 @@ preloadStamps();
 function removeBodyOverlays(): void {
   closePlaylist();
   document.querySelectorAll(
-    'body > .browse-view, body > .single-card-view, body > .add-view, body > [data-overlay]'
+    'body > .browse-view, body > .single-card-view, body > .add-view, body > .search-view, body > [data-overlay]'
   ).forEach(el => el.remove());
 }
 
@@ -87,6 +88,9 @@ function showLanding(): void {
     onPenTap: () => {
       showAdd();
     },
+    onSearchTap: () => {
+      showSearch();
+    },
   });
 }
 
@@ -135,6 +139,25 @@ function showAdd(): void {
     },
     onSaved() {
       // Paper slides down, landing is already visible underneath
+    },
+  });
+}
+
+function showSearch(): void {
+  renderSearchView({
+    onCardTap(entry: Entry) {
+      // Open SingleCardView as overlay on top of search — use 'search' season for bg
+      renderSingleCardView(app, entry, entry.season, {
+        onBack() {
+          document.querySelectorAll('body > .single-card-view').forEach(el => el.remove());
+        },
+        onEdit(e: Entry) {
+          showEdit(e, e.season, 'browse');
+        },
+      }, 'overlay');
+    },
+    onBack() {
+      // Search view removed itself, landing is still underneath
     },
   });
 }
