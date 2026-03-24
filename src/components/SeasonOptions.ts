@@ -79,13 +79,12 @@ export function showSeasonOptions(
     if (movingBackClickHandler) movingBackClickHandler();
   });
 
-  // --- Search button: capture grid position, then hide the grid one ---
-  const searchStartLeft = searchBtn.offsetLeft;
-  const searchStartTop = searchBtn.offsetTop;
+  // --- Search button: use position:fixed on body to avoid stacking issues ---
+  const searchBtnRect = searchBtn.getBoundingClientRect();
+  const searchStartVP = { left: searchBtnRect.left, top: searchBtnRect.top };
   searchBtn.style.visibility = 'hidden';
   searchBtn.style.pointerEvents = 'none';
 
-  // Create a moving search button at the grid search button's position
   const movingSearch = document.createElement('button');
   movingSearch.className = 'season-options__search';
   movingSearch.setAttribute('aria-label', 'Search');
@@ -95,20 +94,11 @@ export function showSeasonOptions(
   movingSearchImg.draggable = false;
   movingSearchImg.className = 'season-options__search-img';
   movingSearch.appendChild(movingSearchImg);
-  movingSearch.style.left = searchStartLeft + 'px';
-  movingSearch.style.top = searchStartTop + 'px';
+  movingSearch.style.position = 'fixed';
+  movingSearch.style.left = searchStartVP.left + 'px';
+  movingSearch.style.top = searchStartVP.top + 'px';
   movingSearch.style.pointerEvents = 'none';
-  movingSearch.style.opacity = '1';
-  movingSearch.style.visibility = 'visible';
-  movingSearch.style.zIndex = '50';
-  movingSearch.style.outline = '3px solid red';
-  wrapper.appendChild(movingSearch);
-  console.log('[search-debug] created movingSearch', {
-    searchStartLeft, searchStartTop,
-    offsetWidth: searchBtn.offsetWidth,
-    offsetHeight: searchBtn.offsetHeight,
-    parentNode: movingSearch.parentNode?.nodeName,
-  });
+  document.body.appendChild(movingSearch);
 
   movingSearch.addEventListener('click', () => {
     console.log('search tapped');
@@ -133,16 +123,11 @@ export function showSeasonOptions(
   // Back → top-left
   const backTargetLeft = -wrapperRect.left + PAD;
   const backTargetTop = -wrapperRect.top + PAD;
-  // Search → top-right (mirror of back)
-  const searchTargetLeft = -wrapperRect.left + window.innerWidth - PAD - searchBtn.offsetWidth;
-  const searchTargetTop = -wrapperRect.top + PAD;
-  console.log('[search-debug] targets', {
-    searchTargetLeft, searchTargetTop,
-    backTargetLeft, backTargetTop,
-    wrapperRect: { left: wrapperRect.left, top: wrapperRect.top, width: wrapperRect.width, height: wrapperRect.height },
-    innerWidth: window.innerWidth,
-    innerHeight: window.innerHeight,
-  });
+  // Search → top-right (viewport coords since it uses position:fixed)
+  const searchTargetVP = {
+    left: window.innerWidth - PAD - searchBtn.offsetWidth,
+    top: PAD,
+  };
 
   // --- Step 1: Animate envelope to center + move back button simultaneously ---
   animateFrames({
@@ -159,9 +144,9 @@ export function showSeasonOptions(
       // Move back button to top-left
       movingBack.style.left = lerp(backStartLeft, backTargetLeft, p) + 'px';
       movingBack.style.top  = lerp(backStartTop,  backTargetTop,  p) + 'px';
-      // Move search button to top-right
-      movingSearch.style.left = lerp(searchStartLeft, searchTargetLeft, p) + 'px';
-      movingSearch.style.top  = lerp(searchStartTop,  searchTargetTop,  p) + 'px';
+      // Move search button to top-right (viewport coords)
+      movingSearch.style.left = lerp(searchStartVP.left, searchTargetVP.left, p) + 'px';
+      movingSearch.style.top  = lerp(searchStartVP.top,  searchTargetVP.top,  p) + 'px';
     },
     onComplete() {
       envelopeEl.style.transform = 'rotate(0deg)';
@@ -301,9 +286,9 @@ export function showSeasonOptions(
         // Move back button back to grid position
         movingBack.style.left = lerp(backTargetLeft, backStartLeft, p) + 'px';
         movingBack.style.top  = lerp(backTargetTop,  backStartTop,  p) + 'px';
-        // Move search button back to grid position
-        movingSearch.style.left = lerp(searchTargetLeft, searchStartLeft, p) + 'px';
-        movingSearch.style.top  = lerp(searchTargetTop,  searchStartTop,  p) + 'px';
+        // Move search button back to grid position (viewport coords)
+        movingSearch.style.left = lerp(searchTargetVP.left, searchStartVP.left, p) + 'px';
+        movingSearch.style.top  = lerp(searchTargetVP.top,  searchStartVP.top,  p) + 'px';
       },
       onComplete() {
         // Remove moving buttons, restore grid buttons
